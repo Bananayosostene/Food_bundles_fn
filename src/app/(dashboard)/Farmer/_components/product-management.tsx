@@ -1,107 +1,90 @@
 "use client"
 
 import { useState } from "react"
-import { Search, MoreHorizontal, Plus } from "lucide-react"
+import { Search, Plus, MapPin, Eye, Trash2, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
-import ProductSubmissionModal, { ProductSubmissionData } from "./product-submission-modal"
+import ProductSubmissionModal from "./product-submission-modal"
+import { useProducts, type Product } from "./product-context"
 
-interface Product {
-  id: string
-  name: string
+interface productSubmitData {
+  productName: string
   category: string
-  quantity: string
+  quantity: number
+  unit: string
   submittedDate: string
-  price: string
-  status: string
-  statusColor: string
-  image: string
+  wishedPrice: number
+  images: File[]
+  location: string
 }
 
 export default function ProductManagement() {
+  const { products, addProduct, deleteProduct } = useProducts()
   const [selectedStatus, setSelectedStatus] = useState<string>("All")
   const [searchTerm, setSearchTerm] = useState("")
   const [showSubmissionModal, setShowSubmissionModal] = useState(false)
-
-  // Initialize with sample products - this should definitely show
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: "1",
-      name: "Organic Apples",
-      category: "Fruits",
-      quantity: "25 kg",
-      submittedDate: "2023-11-15",
-      price: "RWF45.50",
-      status: "Pending",
-      statusColor: "bg-yellow-100 text-yellow-800",
-      image: "/images/tomatoes.svg",
-    },
-    {
-      id: "2",
-      name: "Fresh Carrots",
-      category: "Vegetables",
-      quantity: "18 kg",
-      submittedDate: "2023-11-14",
-      price: "RWF32.75",
-      status: "Verified",
-      statusColor: "bg-blue-100 text-blue-800",
-      image: "/images/carrots.svg",
-    },
-    {
-      id: "3",
-      name: "Heirloom Tomatoes",
-      category: "Vegetables",
-      quantity: "15 kg",
-      submittedDate: "2023-11-12",
-      price: "RWF38.25",
-      status: "Approved",
-      statusColor: "bg-green-100 text-green-800",
-      image: "/images/tomatoes.svg",
-    },
-  ])
+  const [dateFilter, setDateFilter] = useState("")
+  const [showDateFilter, setShowDateFilter] = useState(false)
 
   console.log("ProductManagement rendered, products:", products.length)
 
   const statusOptions = ["All", "Pending", "Verified", "Approved", "Paid"]
 
-  // Filter products
   const filteredProducts = products.filter((product) => {
     const matchesStatus = selectedStatus === "All" || product.status === selectedStatus
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase())
-    return matchesStatus && matchesSearch
+      product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.location.toLowerCase().includes(searchTerm.toLowerCase())
+
+    const matchesDate = !dateFilter || product.submittedDate === dateFilter
+
+    return matchesStatus && matchesSearch && matchesDate
   })
 
   console.log("Filtered products:", filteredProducts.length)
 
-    const handleProductSubmit = (data: ProductSubmissionData) => {
-       
-          const newProduct: Product = {
-            id: (products.length + 1).toString(),
-            name: data.productName,
-            category: data.category.replace("_", " & "),
-            quantity: `${data.quantity} ${data.unit}`,
-            submittedDate: data.submittedDate,
-            price: `$${data.wishedPrice.toFixed(2)}`,
-            status: "Pending",
-            statusColor: "bg-yellow-100 text-yellow-800",
-            image:
-              data.images.length > 0
-                ? URL.createObjectURL(data.images[0])
-                : "/placeholder.svg?height=48&width=48&text=No+Image",
-          }
+  const handleProductSubmit = (data: productSubmitData) => {
+    const newProduct: Product = {
+      id: (products.length + 1).toString(),
+      name: data.productName,
+      category: data.category.replace("_", " & "),
+      quantity: `${data.quantity} ${data.unit}`,
+      submittedDate: data.submittedDate,
+      price: `RWF ${data.wishedPrice.toFixed(2)}`,
+      status: "Pending",
+      statusColor: "bg-yellow-100 text-yellow-800",
+      image:
+        data.images.length > 0
+          ? URL.createObjectURL(data.images[0])
+          : "/placeholder.svg?height=48&width=48&text=No+Image",
+      location: data.location || "Kigali, Rwanda", // Default location
+      priceValue: data.wishedPrice,
+    }
 
-          setProducts((prev) => [newProduct, ...prev])
-          console.log("Product submitted:", data)
-          setShowSubmissionModal(false)
-        }
-      
+    addProduct(newProduct)
+    console.log("Product submitted:", data)
+    setShowSubmissionModal(false)
+  }
+
+  const handleDeleteProduct = (productId: string) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      deleteProduct(productId)
+    }
+  }
+
+  const handleViewDetails = (product: Product) => {
+    console.log("Viewing product details:", product)
+    alert(
+      `Product Details:\nName: ${product.name}\nCategory: ${product.category}\nPrice: ${product.price}\nStatus: ${product.status}`,
+    )
+  }
+
   return (
-    <div className="w-full pl-28 pr-18">
-      <div className="bg-white rounded-lg border border-gray-200  shadow-sm">
+    <div className="w-full pl-28 pr-18 ">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
         {/* Header */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between mb-6">
@@ -137,16 +120,52 @@ export default function ProductManagement() {
             ))}
           </div>
 
-          {/* Search */}
-          <div className="relative max-w-sm">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              placeholder="Search products..."
-              className="pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+          <div className="flex gap-4 items-center">
+            <div className="relative max-w-sm">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                placeholder="Search products, category, or location..."
+                className="pl-10"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowDateFilter(!showDateFilter)}
+                className="flex items-center gap-2"
+              >
+                <Calendar className="w-4 h-4" />
+                Get submitted by Date
+              </Button>
+
+              {dateFilter && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setDateFilter("")}
+                  className="text-red-600 hover:text-red-700"
+                >
+                  Clear Date Filter
+                </Button>
+              )}
+            </div>
           </div>
+
+          {showDateFilter && (
+            <div className="mt-4 max-w-sm">
+              <Input
+                type="date"
+                placeholder="Filter by date"
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                className="w-full"
+              />
+            </div>
+          )}
         </div>
 
         {/* Table */}
@@ -162,6 +181,9 @@ export default function ProductManagement() {
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Category
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Location
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Quantity
@@ -181,9 +203,9 @@ export default function ProductManagement() {
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-6 py-8 text-center text-gray-500">
-                    {searchTerm
-                      ? `No products found matching "${searchTerm}"`
+                  <td colSpan={9} className="px-6 py-8 text-center text-gray-500">
+                    {searchTerm || dateFilter
+                      ? `No products found matching the current filters`
                       : selectedStatus === "All"
                         ? "No products found. Click 'Submit Product' to add your first product."
                         : `No ${selectedStatus.toLowerCase()} products found`}
@@ -210,6 +232,12 @@ export default function ProductManagement() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-600">{product.category}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center text-gray-600">
+                        <MapPin className="w-4 h-4 mr-1 text-gray-400" />
+                        <span className="text-sm">{product.location}</span>
+                      </div>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-600">{product.quantity}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-600">{product.submittedDate}</td>
                     <td className="px-6 py-4 whitespace-nowrap font-medium">{product.price}</td>
@@ -217,9 +245,26 @@ export default function ProductManagement() {
                       <Badge className={`${product.statusColor} border-0`}>{product.status}</Badge>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontal className="w-4 h-4" />
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewDetails(product)}
+                          className="flex items-center gap-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                        >
+                          <Eye className="w-4 h-4" />
+                          View Details
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteProduct(product.id)}
+                          className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Delete
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -233,42 +278,17 @@ export default function ProductManagement() {
           <p className="text-sm text-gray-600">
             Showing {filteredProducts.length} of {products.length} products
             {selectedStatus !== "All" && ` (filtered by ${selectedStatus})`}
+            {dateFilter && ` (filtered by date: ${dateFilter})`}
           </p>
         </div>
       </div>
 
       {/* Product Submission Modal */}
-      {/* <ProductSubmissionModal
+      <ProductSubmissionModal
         isOpen={showSubmissionModal}
         onClose={() => setShowSubmissionModal(false)}
-        onSubmit={(productData) => {
-          const newProduct: Product = {
-            id: (products.length + 1).toString(),
-            name: productData.productName,
-            category: productData.category.replace("_", " & "),
-            quantity: `${productData.quantity} ${productData.unit}`,
-            submittedDate: productData.submittedDate,
-            price: `$${productData.wishedPrice.toFixed(2)}`,
-            status: "Pending",
-            statusColor: "bg-yellow-100 text-yellow-800",
-            image:
-              productData.images.length > 0
-                ? URL.createObjectURL(productData.images[0])
-                : "/placeholder.svg?height=48&width=48&text=No+Image",
-          }
-
-          setProducts((prev) => [newProduct, ...prev])
-          console.log("Product submitted:", productData)
-          setShowSubmissionModal(false)
-        }}
-      /> */}
-
-      
-            <ProductSubmissionModal
-              isOpen={showSubmissionModal}
-              onClose={() => setShowSubmissionModal(false)}
-              onSubmit={handleProductSubmit}
-            />
+        onSubmit={handleProductSubmit}
+      />
     </div>
   )
 }

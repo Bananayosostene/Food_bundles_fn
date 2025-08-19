@@ -1,34 +1,36 @@
+"use client"
+
 import DashboardHeader from "./_components/header"
 import StatsCards from "./_components/stats-cards"
 import ProductManagement from "./_components/product-management"
+import { ProductProvider } from "./_components/product-context"
+import { Footer } from "@/components/footer"
+
 
 export default function FarmerPage() {
- 
-
   return (
+    <ProductProvider>
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col">
+          {/* Header */}
+          <DashboardHeader />
 
-         <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
+          <div className="flex-1 flex">
+            {/* Dashboard Content */}
+            <div className="flex-1 p-6 space-y-6">
+              {/* Stats Cards */}
+              <StatsCards />
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <DashboardHeader  />
-
-        <div className="flex-1 flex">
-          {/* Dashboard Content */}
-          <div className="flex-1 p-6 space-y-6">
-            {/* Stats Cards */}
-            <StatsCards />
-
-            {/* Product Management */}
-            <ProductManagement />
+              {/* Product Management */}
+              <ProductManagement />
+            </div>
           </div>
-
         </div>
-      </div>
 
-    </div>
-  
+        {/* Footer */}
+        <Footer />
+      </div>
+    </ProductProvider>
   )
 }

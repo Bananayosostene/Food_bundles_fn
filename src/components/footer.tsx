@@ -87,16 +87,16 @@ export function Footer() {
             <h3 className="text-lg font-semibold">Contact Us</h3>
             <div className="space-y-2 text-sm text-gray-400">
               <p>123 Market Street</p>
-              <p>Farmville, CA 94123</p>
-              <p>info@foodbundle.com</p>
-              <p>(555) 123-4567</p>
+              <p>Location, KG5AV</p>
+              <p>shikama@food.rw</p>
+              <p>Tel:+250788963267</p>
             </div>
           </div>
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2023 FoodBundle. All rights reserved.
+            © 2025 FoodBundle. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <Link
