@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
-import ProductSubmissionModal from "./product-submission-modal"
+import ProductSubmissionModal, { ProductSubmissionData } from "./product-submission-modal"
 
 interface Product {
   id: string
@@ -77,9 +77,31 @@ export default function ProductManagement() {
 
   console.log("Filtered products:", filteredProducts.length)
 
+    const handleProductSubmit = (data: ProductSubmissionData) => {
+       
+          const newProduct: Product = {
+            id: (products.length + 1).toString(),
+            name: data.productName,
+            category: data.category.replace("_", " & "),
+            quantity: `${data.quantity} ${data.unit}`,
+            submittedDate: data.submittedDate,
+            price: `$${data.wishedPrice.toFixed(2)}`,
+            status: "Pending",
+            statusColor: "bg-yellow-100 text-yellow-800",
+            image:
+              data.images.length > 0
+                ? URL.createObjectURL(data.images[0])
+                : "/placeholder.svg?height=48&width=48&text=No+Image",
+          }
+
+          setProducts((prev) => [newProduct, ...prev])
+          console.log("Product submitted:", data)
+          setShowSubmissionModal(false)
+        }
+      
   return (
-    <div className="w-full">
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+    <div className="w-full pl-28 pr-18">
+      <div className="bg-white rounded-lg border border-gray-200  shadow-sm">
         {/* Header */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between mb-6">
@@ -216,7 +238,7 @@ export default function ProductManagement() {
       </div>
 
       {/* Product Submission Modal */}
-      <ProductSubmissionModal
+      {/* <ProductSubmissionModal
         isOpen={showSubmissionModal}
         onClose={() => setShowSubmissionModal(false)}
         onSubmit={(productData) => {
@@ -239,7 +261,14 @@ export default function ProductManagement() {
           console.log("Product submitted:", productData)
           setShowSubmissionModal(false)
         }}
-      />
+      /> */}
+
+      
+            <ProductSubmissionModal
+              isOpen={showSubmissionModal}
+              onClose={() => setShowSubmissionModal(false)}
+              onSubmit={handleProductSubmit}
+            />
     </div>
   )
 }
