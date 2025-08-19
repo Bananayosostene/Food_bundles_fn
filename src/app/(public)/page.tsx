@@ -8,8 +8,40 @@ import { ProductsSection } from "@/components/products-section";
 import { QuickTalkWrapper } from "@/components/quck-talk-section";
 import { useState } from "react";
 
-export default function HomePage() {
-  const [isGuest, setIsGuest] = useState(true);
+// Mock data fetching functions (replace with actual API calls)
+async function getHomeData() {
+  // Simulate API call
+  return {
+    title: "Fresh From Farm\nto Table",
+    subtitle: "Farm to Table Excellence",
+    description:
+      "Connecting local farmers with restaurants for sustainable food systems. Build direct relationships and create a more efficient supply chain.",
+    primaryButton: {
+      text: "Submit Your Product →",
+      href: "/login",
+    },
+    secondaryButton: {
+      text: "Shop Now →",
+      href: "/login"
+    },
+    heroImage: {
+      src: "/imgs/FRAME.png",
+      alt: "Fresh produce arranged in a circle with wooden cutting board center",
+    },
+    decorativeElements: {
+      stars: {
+        large: {
+          src: "/imgs/Vector 1.png",
+          alt: "Decorative star",
+        },
+        small: {
+          src: "/imgs/Vector 1.png",
+          alt: "Decorative star",
+        },
+      },
+    },
+  };
+}
 
   const restaurants = [
     {

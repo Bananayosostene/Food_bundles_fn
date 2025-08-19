@@ -24,14 +24,26 @@ export function Footer() {
             <h3 className="text-lg font-semibold text-white">Quick Links</h3>
             <div className="space-y-2">
               <Link
-                href="/farmers"
-                className="block text-green-200 hover:text-white transition-colors text-sm"
+                href="#about"
+                className="block text-gray-400 hover:text-white transition-colors text-sm"
+              >
+                About Us
+              </Link>
+              <Link
+                href="/how-it-works"
+                className="block text-gray-400 hover:text-white transition-colors text-sm"
+              >
+                How it Works
+              </Link>
+              <Link
+                href="/Farmer"
+                className="block text-gray-400 hover:text-white transition-colors text-sm"
               >
                 For Farmers
               </Link>
               <Link
-                href="/restaurants"
-                className="block text-green-200 hover:text-white transition-colors text-sm"
+                href="/restaurant"
+                className="block text-gray-400 hover:text-white transition-colors text-sm"
               >
                 For Restaurants
               </Link>

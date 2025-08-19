@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,32 @@ import Link from "next/link";
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+=======
+"use client"
+
+import { Leaf, Menu } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
+import Image from "next/image"
+
+export default function Header() {
+  // Function to scroll to section on the same page
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
+>>>>>>> 2d70e2d (Implemented farmer page)
   return (
     <header className="sticky top-0 z-50">
       <div className="flex">
@@ -26,9 +53,107 @@ export function Header() {
           <span className="text-xl font-bold text-black">FoodBundles</span>
         </div>
 
+<<<<<<< HEAD
         <div className="flex-1 bg-green-700 text-primary-foreground">
           <div className="container mx-auto px-4 py-4 flex items-center">
             <div className="flex-1" />
+=======
+      {/* Desktop Navigation Menu */}
+      <NavigationMenu className="hidden md:flex">
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              href="#home"
+              onClick={(e) => {
+                e.preventDefault()
+                window.scrollTo({ top: 0, behavior: "smooth" })
+              }}
+              className={cn(
+                "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                "text-gray-700 hover:text-green-600",
+              )}
+            >
+              Home
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              href="#featured-products"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection("featured-products")
+              }}
+              className={cn(
+                "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                "text-gray-700 hover:text-green-600",
+              )}
+            >
+              Products
+        </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              href="#Promotions"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection("Promotion")
+              }}
+              className={cn(
+                "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                "text-gray-700 hover:text-green-600",
+              )}
+            >
+              Promotion
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+           <NavigationMenuItem>
+            <NavigationMenuLink
+              href="#how-it-works"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection("how-it-works")
+              }}
+              className={cn(
+                "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                "text-gray-700 hover:text-green-600",
+              )}
+            >
+              How It Works
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              href="#why-choose"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection("why-choose")
+              }}
+              className={cn(
+                "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                "text-gray-700 hover:text-green-600",
+              )}
+            >
+              About
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              href="#contact-us"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection("contact-us")
+              }}
+              className={cn(
+                "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                "text-gray-700 hover:text-green-600",
+              )}
+            >
+              Contact
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+>>>>>>> 2d70e2d (Implemented farmer page)
 
             <nav className="hidden md:flex items-center gap-6">
               <a
@@ -60,8 +185,49 @@ export function Header() {
                 </Button>
                 </Link>
               </div>
+<<<<<<< HEAD
 
               {/* Mobile Menu Button */}
+=======
+              FoodBundle
+            </SheetTitle>
+            <SheetDescription>Connecting farms to tables with fresh, local produce</SheetDescription>
+          </SheetHeader>
+          <div className="grid gap-4 py-6">
+            <button
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" })
+              }}
+              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
+            >
+              Home
+            </button>
+            <button
+              onClick={() => scrollToSection("featured-products")}
+              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
+            >
+              Products
+            </button>
+            <button
+              onClick={() => scrollToSection("how-it-works")}
+              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
+            >
+              How It Works
+            </button>
+            <button
+              onClick={() => scrollToSection("why-choose")}
+              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
+            >
+              About
+            </button>
+            <button
+              onClick={() => scrollToSection("contact-us")}
+              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
+            >
+              Contact
+            </button>
+            <div className="flex flex-col gap-3 pt-6 border-t">
+>>>>>>> 2d70e2d (Implemented farmer page)
               <Button
                 variant="ghost"
                 size="sm"
