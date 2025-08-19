@@ -51,7 +51,7 @@ export default function FeaturedProducts({ data }: FeaturedProductsProps) {
   // Add error handling and fallbacks
   if (!data) {
     return (
-      <section className="relative z-10 px-8 py-16 bg-white">
+      <section id="featured-products" className="relative z-10 px-8 py-16 bg-white">
         <div className="max-w-7xl mx-auto text-center">
           <p className="text-gray-500">Loading featured products...</p>
         </div>
@@ -61,7 +61,7 @@ export default function FeaturedProducts({ data }: FeaturedProductsProps) {
 
   if (!data.products || data.products.length === 0) {
     return (
-      <section className="relative z-10 px-8 py-16 bg-white">
+      <section id="featured-products" className="relative z-10 px-8 py-16 bg-white">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{data.title || "Featured Products"}</h2>
           <p className="text-base text-gray-600">No products available at the moment.</p>
@@ -127,7 +127,7 @@ export default function FeaturedProducts({ data }: FeaturedProductsProps) {
   }
 
   return (
-    <section className="relative z-10 px-8 py-16 bg-white">
+    <section id="featured-products" className="relative z-10 px-8 py-16 bg-white">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
@@ -227,7 +227,6 @@ export default function FeaturedProducts({ data }: FeaturedProductsProps) {
               )
             })}
           </div>
-
         </div>
 
         {/* Products Count Info with Active Indicators */}

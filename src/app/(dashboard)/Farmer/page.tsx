@@ -1,33 +1,40 @@
 "use client"
 
-import DashboardHeader from "./_components/header"
-import StatsCards from "./_components/stats-cards"
-import ProductManagement from "./_components/product-management"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import ProductSubmissionModal, { ProductSubmissionData } from "./_components/product-submission-modal"
 
-export default function FarmerDashboard() {
-  
+export default function FarmerPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleProductSubmit = (data: ProductSubmissionData) => {
+    console.log("Product submitted:", data)
+    // Handle the product submission here
+    setIsModalOpen(false)
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <DashboardHeader onNotificationClick={() =>(true)} />
-
-        <div className="flex-1 flex">
-          {/* Dashboard Content */}
-          <div className="flex-1 p-6 space-y-6">
-            {/* Stats Cards */}
-            <StatsCards />
-
-            {/* Product Management */}
-            <ProductManagement />
-          </div>
-
-        </div>
+    <div className="container mx-auto p-6">
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-3xl font-bold">Farmer Dashboard</h1>
+        <Button 
+          onClick={() => setIsModalOpen(true)}
+          className="bg-green-600 hover:bg-green-700"
+        >
+          Add New Product
+        </Button>
       </div>
 
+      {/* Your other dashboard content */}
+      <div className="grid gap-6">
+        {/* Dashboard content */}
+      </div>
+
+      <ProductSubmissionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleProductSubmit}
+      />
     </div>
   )
 }

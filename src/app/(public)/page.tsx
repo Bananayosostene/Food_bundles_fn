@@ -16,11 +16,11 @@ async function getHomeData() {
       "Connecting local farmers with restaurants for sustainable food systems. Build direct relationships and create a more efficient supply chain.",
     primaryButton: {
       text: "Submit Your Product →",
-      href: "/submit-product",
+      href: "/login",
     },
     secondaryButton: {
       text: "Shop Now →",
-      href: "/shop",
+      href: "/login"
     },
     heroImage: {
       src: "/images/FRAME.png",

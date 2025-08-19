@@ -1,14 +1,15 @@
 "use client"
 
 import type React from "react"
+
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Textarea } from "./ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Textarea } from "@/components/ui/textarea"
 import { MapPin, Mail, Phone, Clock, Send, User, MessageSquare } from "lucide-react"
 
-export default function Contacts() {
+export default function ContactUs() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
@@ -35,8 +36,8 @@ export default function Contacts() {
       e.currentTarget.reset()
     } catch (error: unknown) {
       console.error("Contact form error:", error)
-      if (typeof error === "object" && error !== null && "message" in error) {
-        setError((error as { message?: string }).message || "Failed to send message. Please try again.")
+      if (error instanceof Error) {
+        setError(error.message || "Failed to send message. Please try again.")
       } else {
         setError("Failed to send message. Please try again.")
       }
@@ -46,7 +47,7 @@ export default function Contacts() {
   }
 
   return (
-    <section className="relative z-10 px-8 py-16 bg-white-8">
+    <section id="contact-us" className="relative z-10 px-8 py-16 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
           {/* Left Column - Contact Form */}

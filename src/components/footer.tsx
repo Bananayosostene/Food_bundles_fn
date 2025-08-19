@@ -25,7 +25,7 @@ export function Footer() {
             <h3 className="text-lg font-semibold">Quick Links</h3>
             <div className="space-y-2">
               <Link
-                href="/about"
+                href="#about"
                 className="block text-gray-400 hover:text-white transition-colors text-sm"
               >
                 About Us
@@ -37,13 +37,13 @@ export function Footer() {
                 How it Works
               </Link>
               <Link
-                href="/farmers"
+                href="/Farmer"
                 className="block text-gray-400 hover:text-white transition-colors text-sm"
               >
                 For Farmers
               </Link>
               <Link
-                href="/restaurants"
+                href="/restaurant"
                 className="block text-gray-400 hover:text-white transition-colors text-sm"
               >
                 For Restaurants

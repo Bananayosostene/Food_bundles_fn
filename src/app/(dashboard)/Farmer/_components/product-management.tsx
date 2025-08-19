@@ -1,14 +1,34 @@
-import { Search, Filter, MoreHorizontal } from "lucide-react"
+"use client"
+
+import { useState } from "react"
+import { Search, MoreHorizontal, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import Image from "next/image"
+import ProductSubmissionModal from "./product-submission-modal"
+
+interface Product {
+  id: string
+  name: string
+  category: string
+  quantity: string
+  submittedDate: string
+  price: string
+  status: string
+  statusColor: string
+  image: string
+}
 
 export default function ProductManagement() {
-  const products = [
+  const [selectedStatus, setSelectedStatus] = useState<string>("All")
+  const [searchTerm, setSearchTerm] = useState("")
+  const [showSubmissionModal, setShowSubmissionModal] = useState(false)
+
+  // Initialize with sample products - this should definitely show
+  const [products, setProducts] = useState<Product[]>([
     {
-      id: "O",
+      id: "1",
       name: "Organic Apples",
       category: "Fruits",
       quantity: "25 kg",
@@ -16,9 +36,10 @@ export default function ProductManagement() {
       price: "$45.50",
       status: "Pending",
       statusColor: "bg-yellow-100 text-yellow-800",
+      image: "/images/tomatoes.svg",
     },
     {
-      id: "F",
+      id: "2",
       name: "Fresh Carrots",
       category: "Vegetables",
       quantity: "18 kg",
@@ -26,9 +47,10 @@ export default function ProductManagement() {
       price: "$32.75",
       status: "Verified",
       statusColor: "bg-blue-100 text-blue-800",
+      image: "/images/carrots.svg",
     },
     {
-      id: "H",
+      id: "3",
       name: "Heirloom Tomatoes",
       category: "Vegetables",
       quantity: "15 kg",
@@ -36,131 +58,188 @@ export default function ProductManagement() {
       price: "$38.25",
       status: "Approved",
       statusColor: "bg-green-100 text-green-800",
+      image: "/images/tomatoes.svg",
     },
-    {
-      id: "O",
-      name: "Organic Kale",
-      category: "Greens",
-      quantity: "10 kg",
-      submittedDate: "2023-11-10",
-      price: "$27.50",
-      status: "Paid",
-      statusColor: "bg-purple-100 text-purple-800",
-    },
-    {
-      id: "F",
-      name: "Free-range Eggs",
-      category: "Dairy & Eggs",
-      quantity: "30 dozen",
-      submittedDate: "2023-11-09",
-      price: "$63.00",
-      status: "Approved",
-      statusColor: "bg-green-100 text-green-800",
-    },
-    {
-      id: "G",
-      name: "Green Onions",
-      category: "Vegetables",
-      quantity: "8 kg",
-      submittedDate: "2023-11-08",
-      price: "$12.80",
-      status: "Verified",
-      statusColor: "bg-blue-100 text-blue-800",
-    },
-  ]
+  ])
+
+  console.log("ProductManagement rendered, products:", products.length)
+
+  const statusOptions = ["All", "Pending", "Verified", "Approved", "Paid"]
+
+  // Filter products
+  const filteredProducts = products.filter((product) => {
+    const matchesStatus = selectedStatus === "All" || product.status === selectedStatus
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchTerm.toLowerCase())
+    return matchesStatus && matchesSearch
+  })
+
+  console.log("Filtered products:", filteredProducts.length)
 
   return (
-    <div className="flex  pl-30">
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm w-full max-w-6xl">
+    <div className="w-full">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+        {/* Header */}
         <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-gray-900">Product Management</h2>
+            <Button
+              onClick={() => setShowSubmissionModal(true)}
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Submit Product
+            </Button>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input placeholder="Search products..." className="pl-10" />
-            </div>
-            <Button variant="outline" className="flex items-center gap-2 bg-transparent">
-              <Filter className="w-4 h-4" />
-              Filter
-            </Button>
+          {/* Status Filter Buttons */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            {statusOptions.map((status) => (
+              <Button
+                key={status}
+                variant="outline"
+                size="sm"
+                onClick={() => setSelectedStatus(status)}
+                className={`transition-all duration-200 ${
+                  selectedStatus === status
+                    ? "bg-green-600 text-white border-green-600"
+                    : "bg-transparent text-gray-600 border-gray-300 hover:bg-gray-50"
+                }`}
+              >
+                {status}
+                <span className="ml-2 text-xs">
+                  ({status === "All" ? products.length : products.filter((p) => p.status === status).length})
+                </span>
+              </Button>
+            ))}
+          </div>
+
+          {/* Search */}
+          <div className="relative max-w-sm">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              placeholder="Search products..."
+              className="pl-10"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
 
-        <div className=  "p-6">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Product</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Quantity</TableHead>
-                <TableHead>Submitted Date</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {products.map((product, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-sm font-medium">
-                        {product.id}
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Image
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Product Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Category
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Quantity
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Price
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredProducts.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="px-6 py-8 text-center text-gray-500">
+                    {searchTerm
+                      ? `No products found matching "${searchTerm}"`
+                      : selectedStatus === "All"
+                        ? "No products found. Click 'Submit Product' to add your first product."
+                        : `No ${selectedStatus.toLowerCase()} products found`}
+                  </td>
+                </tr>
+              ) : (
+                filteredProducts.map((product) => (
+                  <tr key={product.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                        <Image
+                          src={product.image || "/placeholder.svg"}
+                          alt={product.name}
+                          width={48}
+                          height={48}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                      <span className="font-medium">{product.name}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-gray-600">{product.category}</TableCell>
-                  <TableCell className="text-gray-600">{product.quantity}</TableCell>
-                  <TableCell className="text-gray-600">{product.submittedDate}</TableCell>
-                  <TableCell className="font-medium">{product.price}</TableCell>
-                  <TableCell>
-                    <Badge className={product.statusColor}>{product.status}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View Details</DropdownMenuItem>
-                        <DropdownMenuItem>Edit Product</DropdownMenuItem>
-                        <DropdownMenuItem>Delete</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div>
+                        <div className="font-medium text-gray-900">{product.name}</div>
+                        <div className="text-sm text-gray-500">ID: {product.id}</div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-600">{product.category}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-600">{product.quantity}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-600">{product.submittedDate}</td>
+                    <td className="px-6 py-4 whitespace-nowrap font-medium">{product.price}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <Badge className={`${product.statusColor} border-0`}>{product.status}</Badge>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <Button variant="ghost" size="icon">
+                        <MoreHorizontal className="w-4 h-4" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
 
-        <div className="p-4 border-t border-gray-200 flex items-center justify-between">
-          <p className="text-sm text-gray-600">Showing 1 to 6 of 24 entries</p>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              Previous
-            </Button>
-            <Button variant="outline" size="sm" className="bg-green-600 text-white">
-              1
-            </Button>
-            <Button variant="outline" size="sm">
-              2
-            </Button>
-            <Button variant="outline" size="sm">
-              3
-            </Button>
-            <Button variant="outline" size="sm">
-              Next
-            </Button>
-          </div>
+        {/* Footer */}
+        <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+          <p className="text-sm text-gray-600">
+            Showing {filteredProducts.length} of {products.length} products
+            {selectedStatus !== "All" && ` (filtered by ${selectedStatus})`}
+          </p>
         </div>
       </div>
+
+      {/* Product Submission Modal */}
+      <ProductSubmissionModal
+        isOpen={showSubmissionModal}
+        onClose={() => setShowSubmissionModal(false)}
+        onSubmit={(productData) => {
+          const newProduct: Product = {
+            id: (products.length + 1).toString(),
+            name: productData.productName,
+            category: productData.category.replace("_", " & "),
+            quantity: `${productData.quantity} ${productData.unit}`,
+            submittedDate: productData.submittedDate,
+            price: `$${productData.wishedPrice.toFixed(2)}`,
+            status: "Pending",
+            statusColor: "bg-yellow-100 text-yellow-800",
+            image:
+              productData.images.length > 0
+                ? URL.createObjectURL(productData.images[0])
+                : "/placeholder.svg?height=48&width=48&text=No+Image",
+          }
+
+          setProducts((prev) => [newProduct, ...prev])
+          console.log("Product submitted:", productData)
+          setShowSubmissionModal(false)
+        }}
+      />
     </div>
   )
 }

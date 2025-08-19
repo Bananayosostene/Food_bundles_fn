@@ -1,3 +1,5 @@
+"use client"
+
 import { Leaf, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -11,6 +13,14 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 
 export default function Header() {
+  // Function to scroll to section on the same page
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
   return (
     <header className="sticky top-0 z-50 flex items-center justify-between max-w-7xl mx-auto py-6 bg-white/80 backdrop-blur-md border-b border-gray-100/50">
       {/* Logo */}
@@ -26,7 +36,11 @@ export default function Header() {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink
-              href="/"
+              href="#home"
+              onClick={(e) => {
+                e.preventDefault()
+                window.scrollTo({ top: 0, behavior: "smooth" })
+              }}
               className={cn(
                 "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
                 "text-gray-700 hover:text-green-600",
@@ -37,18 +51,41 @@ export default function Header() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink
-              href="#how_it_work"
+              href="#featured-products"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection("featured-products")
+              }}
               className={cn(
                 "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
                 "text-gray-700 hover:text-green-600",
               )}
             >
-              About
-            </NavigationMenuLink>
+              Products
+        </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink
-              href="/how-it-works"
+              href="#Promotions"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection("Promotion")
+              }}
+              className={cn(
+                "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                "text-gray-700 hover:text-green-600",
+              )}
+            >
+              Promotion
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+           <NavigationMenuItem>
+            <NavigationMenuLink
+              href="#how-it-works"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection("how-it-works")
+              }}
               className={cn(
                 "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
                 "text-gray-700 hover:text-green-600",
@@ -59,7 +96,26 @@ export default function Header() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink
-              href="/contact"
+              href="#why-choose"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection("why-choose")
+              }}
+              className={cn(
+                "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                "text-gray-700 hover:text-green-600",
+              )}
+            >
+              About
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              href="#contact-us"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection("contact-us")
+              }}
               className={cn(
                 "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
                 "text-gray-700 hover:text-green-600",
@@ -105,30 +161,38 @@ export default function Header() {
             <SheetDescription>Connecting farms to tables with fresh, local produce</SheetDescription>
           </SheetHeader>
           <div className="grid gap-4 py-6">
-            <Link
-              href="/"
-              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors"
+            <button
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" })
+              }}
+              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
             >
               Home
-            </Link>
-            <Link
-              href="/"
-              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors"
+            </button>
+            <button
+              onClick={() => scrollToSection("featured-products")}
+              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
             >
-              About
-            </Link>
-            <Link
-              href="#how-it-works"
-              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors"
+              Products
+            </button>
+            <button
+              onClick={() => scrollToSection("how-it-works")}
+              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
             >
               How It Works
-            </Link>
-            <Link
-              href="#contact"
-              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors"
+            </button>
+            <button
+              onClick={() => scrollToSection("why-choose")}
+              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
+            >
+              About
+            </button>
+            <button
+              onClick={() => scrollToSection("contact-us")}
+              className="flex items-center py-2 text-lg font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
             >
               Contact
-            </Link>
+            </button>
             <div className="flex flex-col gap-3 pt-6 border-t">
               <Button
                 variant="outline"
