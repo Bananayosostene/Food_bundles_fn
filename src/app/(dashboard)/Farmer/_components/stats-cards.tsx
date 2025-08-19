@@ -5,28 +5,28 @@ export default function StatsCards() {
   const stats = [
     {
       title: "Total Products",
-      value: "24",
+      value: "5",
       icon: Package,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
     },
     {
       title: "Approved Products",
-      value: "16",
+      value: "1",
       icon: CheckCircle,
       color: "text-green-600",
       bgColor: "bg-green-50",
     },
     {
       title: "Pending Products",
-      value: "5",
+      value: "1",
       icon: Clock,
       color: "text-yellow-600",
       bgColor: "bg-yellow-50",
     },
     {
       title: "Revenue this Month",
-      value: "$1,254.75",
+      value: "154.75 RWF",
       icon: DollarSign,
       color: "text-purple-600",
       bgColor: "bg-purple-50",
