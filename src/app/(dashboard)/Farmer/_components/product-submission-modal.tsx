@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useRef } from "react"
-import { X, Upload, Calendar, DollarSign, Package, Tag, ImageIcon, MapPin } from "lucide-react"
+import { X, Upload, DollarSign, Package, Tag, ImageIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -16,10 +16,8 @@ export interface ProductSubmissionData {
   category: string
   quantity: number
   unit: string
-  submittedDate: string
   wishedPrice: number
   images: File[]
-  location: string
 }
 
 interface ProductSubmissionModalProps {
@@ -43,29 +41,14 @@ const categories = [
 
 const units = ["kg", "lb", "g", "oz", "bunch", "bag", "box", "crate", "dozen", "piece", "liter", "gallon"]
 
-const rwandanLocations = [
-  "Kigali, Rwanda",
-  "Musanze, Rwanda",
-  "Huye, Rwanda",
-  "Nyagatare, Rwanda",
-  "Rubavu, Rwanda",
-  "Muhanga, Rwanda",
-  "Kayonza, Rwanda",
-  "Rusizi, Rwanda",
-  "Burera, Rwanda",
-  "Nyanza, Rwanda",
-]
-
 export default function ProductSubmissionModal({ isOpen, onClose, onSubmit }: ProductSubmissionModalProps) {
   const [formData, setFormData] = useState<ProductSubmissionData>({
     productName: "",
     category: "",
     quantity: 0,
     unit: "kg",
-    submittedDate: new Date().toISOString().split("T")[0],
     wishedPrice: 0,
     images: [],
-    location: "Kigali, Rwanda",
   })
 
   const [dragActive, setDragActive] = useState(false)
@@ -146,7 +129,6 @@ export default function ProductSubmissionModal({ isOpen, onClose, onSubmit }: Pr
     if (formData.quantity <= 0) newErrors.quantity = "Quantity must be greater than 0"
     if (formData.wishedPrice <= 0) newErrors.wishedPrice = "Price must be greater than 0"
     if (formData.images.length === 0) newErrors.images = "At least one product image is required"
-    if (!formData.location) newErrors.location = "Location is required"
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -170,10 +152,8 @@ export default function ProductSubmissionModal({ isOpen, onClose, onSubmit }: Pr
         category: "",
         quantity: 0,
         unit: "kg",
-        submittedDate: new Date().toISOString().split("T")[0],
         wishedPrice: 0,
         images: [],
-        location: "Kigali, Rwanda",
       })
       setPreviewImages([])
       setErrors({})
@@ -319,29 +299,6 @@ export default function ProductSubmissionModal({ isOpen, onClose, onSubmit }: Pr
               </div>
             </div>
 
-            {/* Location */}
-            <div className="space-y-2">
-              <Label htmlFor="location" className="text-base font-semibold flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                Farm Location *
-              </Label>
-              <select
-                id="location"
-                value={formData.location}
-                onChange={(e) => handleInputChange("location", e.target.value)}
-                className={`w-full h-12 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                  errors.location ? "border-red-300" : "border-gray-300"
-                }`}
-              >
-                {rwandanLocations.map((location) => (
-                  <option key={location} value={location}>
-                    {location}
-                  </option>
-                ))}
-              </select>
-              {errors.location && <p className="text-red-500 text-sm">{errors.location}</p>}
-            </div>
-
             {/* Quantity and Unit */}
             <div className="grid md:grid-cols-3 gap-6">
               <div className="space-y-2">
@@ -396,21 +353,6 @@ export default function ProductSubmissionModal({ isOpen, onClose, onSubmit }: Pr
                 />
                 {errors.wishedPrice && <p className="text-red-500 text-sm">{errors.wishedPrice}</p>}
               </div>
-            </div>
-
-            {/* Submitted Date */}
-            <div className="space-y-2">
-              <Label htmlFor="submittedDate" className="text-base font-semibold flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                Harvest/Available Date
-              </Label>
-              <Input
-                id="submittedDate"
-                type="date"
-                value={formData.submittedDate}
-                onChange={(e) => handleInputChange("submittedDate", e.target.value)}
-                className="h-12 max-w-xs"
-              />
             </div>
 
             {/* Action Buttons */}
