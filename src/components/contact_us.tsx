@@ -1,15 +1,11 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Textarea } from "@/components/ui/textarea"
 import { MapPin, Mail, Phone, Clock, Send, User, MessageSquare } from "lucide-react"
 
-export default function ContactUs() {
+export function ContactUs() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
@@ -60,12 +56,12 @@ export default function ContactUs() {
               </p>
             </div>
 
-            <Card className="w-full shadow-xl border-0">
-              <CardHeader className="text-center pb-2">
+            <div className="w-full shadow-xl border-0 bg-white rounded-lg border border-gray-200">
+              <div className="text-center pb-2 p-6 border-b border-gray-100">
                 <h3 className="text-xl font-bold text-gray-900">Get in Touch</h3>
                 <p className="text-gray-600 text-sm">Send us a message and we will respond promptly</p>
-              </CardHeader>
-              <CardContent className="p-6 space-y-6">
+              </div>
+              <div className="p-6 space-y-6">
                 {error && (
                   <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
                     {error}
@@ -81,11 +77,11 @@ export default function ContactUs() {
                   {/* Name Field */}
                   <div className="relative">
                     <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
+                    <input
                       type="text"
                       name="name"
                       placeholder="Your Name"
-                      className="pl-10 h-12 border-gray-300 focus:border-green-500 focus:ring-green-500"
+                      className="w-full pl-10 h-12 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       required
                       disabled={isLoading}
                     />
@@ -94,11 +90,11 @@ export default function ContactUs() {
                   {/* Email Field */}
                   <div className="relative">
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
+                    <input
                       type="email"
                       name="email"
                       placeholder="Email Address"
-                      className="pl-10 h-12 border-gray-300 focus:border-green-500 focus:ring-green-500"
+                      className="w-full pl-10 h-12 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       required
                       disabled={isLoading}
                     />
@@ -107,18 +103,22 @@ export default function ContactUs() {
                   {/* Message Field */}
                   <div className="relative">
                     <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Textarea
+                    <textarea
                       name="message"
                       placeholder="How can we help you?"
                       rows={5}
-                      className="pl-10 pt-3 border-gray-300 focus:border-green-500 focus:ring-green-500 resize-none"
+                      className="w-full pl-10 pt-3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none"
                       required
                       disabled={isLoading}
                     />
                   </div>
 
                   {/* Submit Button */}
-                  <Button type="submit" className="w-full h-12 bg-green-600 hover:bg-green-700" disabled={isLoading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors duration-200" 
+                    disabled={isLoading}
+                  >
                     {isLoading ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -132,8 +132,8 @@ export default function ContactUs() {
                     )}
                   </Button>
                 </form>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Right Column - Contact Information */}

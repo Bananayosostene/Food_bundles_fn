@@ -29,7 +29,7 @@ interface PromotionsProps {
   data: PromotionsData
 }
 
-export default function Promotions({ data }: PromotionsProps) {
+export function Promotions({ data }: PromotionsProps) {
   const [isHovered, setIsHovered] = useState(false)
 
   // Use the first two products from the data

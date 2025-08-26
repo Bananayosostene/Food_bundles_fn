@@ -1,161 +1,183 @@
 import Home from "@/components/home"
-import FeaturedProducts from "@/components/featured_products"
-import HowItWorks from "@/components/how_it_work"
-import WhyChoose from "@/components/why_choose"
-import Promotions from "@/components/promotion"
-import ContactUs from "@/components/contact_us"
+import ProductGrid  from "@/components/products"
 
-
-// Mock data fetching functions (replace with actual API calls)
+// Mock data fetching function
 async function getHomeData() {
-  // Simulate API call
   return {
-    title: "Fresh From Farm\nto Table",
-    subtitle: "Farm to Table Excellence",
+    title: "FOOD BUNDLES",
     description:
-      "Connecting local farmers with restaurants for sustainable food systems. Build direct relationships and create a more efficient supply chain.",
-    primaryButton: {
-      text: "Submit Your Product →",
-      href: "/login",
-    },
+      "Connect Your Restaurant to Our Farm.",
     secondaryButton: {
       text: "Shop Now →",
-      href: "/login"
+      href: "/login",
     },
     heroImage: {
-      src: "/images/FRAME.png",
-      alt: "Fresh produce arranged in a circle with wooden cutting board center",
+      src: "/images/serving.jpg",
+      alt: "Restaurant dining scene with waiter serving customers",
     },
     decorativeElements: {
       stars: {
         large: {
           src: "/images/Vector 1.png",
-          alt: "Decorative star",
+          alt: "Decorative Vector 1 star",
         },
         small: {
           src: "/images/Vector 1.png",
-          alt: "Decorative star",
+          alt: "Small decorative star",
         },
       },
     },
   }
 }
 
-async function getFeaturedProductsData() {
-  // Simulate API call
-  return {
-    title: "Featured Fresh Products",
-    subtitle: "Explore our curated selection of seasonal produce from local farms",
-    products: [
-      {
-        id: "550e8400-e29b-41d4-a716-446655440001",
-        productName: "Organic Tomatoes",
-        unitPrice: 4.99,
-        unit: "lb",
-        category: "VEGETABLES",
-        sku: "TOM-ORG-001",
-        quantity: 50.0,
-        images: ["/images/tomatoes.svg"],
-        status: "ACTIVE",
-      },
-      {
-        id: "550e8400-e29b-41d4-a716-446655440002",
-        productName: "Fresh Asparagus",
-        unitPrice: 6.49,
-        unit: "bunch",
-        category: "VEGETABLES",
-        sku: "ASP-FRS-002",
-        quantity: 25.0,
-        images: ["/images/asparagus.svg"],
-        status: "ACTIVE",
-      },
-      {
-        id: "550e8400-e29b-41d4-a716-446655440003",
-        productName: "Rainbow Carrots",
-        unitPrice: 3.7,
-        unit: "lb",
-        category: "VEGETABLES",
-        sku: "CAR-RBW-003",
-        quantity: 75.0,
-        images: ["/images/carrots.svg"],
-        status: "ACTIVE",
-      },
-      {
-        id: "550e8400-e29b-41d4-a716-446655440004",
-        productName: "Organic Spinach",
-        unitPrice: 5.2,
-        unit: "bag",
-        category: "HERBS_SPICES",
-        sku: "SPN-ORG-004",
-        quantity: 30.0,
-        images: ["/images/spinach.svg"],
-        status: "ACTIVE",
-      },
-    ],
-  }
-}
-
-async function getPromotionsData() {
-  // Simulate API call
-  return {
-    title: "Weekly Special Offers",
-    products: [
-      {
-        id: "promo-001",
-        productName: "Organic Heirloom Tomatoes",
-        description: "Premium vine-ripened tomatoes, hand-picked at peak freshness. Perfect for gourmet restaurants.",
-        unitPrice: 6.99,
-        originalPrice: 9.99,
-        discountPercentage: 30,
-        unit: "lb",
-        quantity: 50.0,
-        images: ["/images/tomatoes.svg"],
-        farmName: "Sunset Valley Farm",
-        category: "VEGETABLES",
-        sku: "TOM-PROMO-001",
-      },
-      {
-        id: "promo-002",
-        productName: "Premium Organic Spinach",
-        description: "Fresh baby spinach leaves, grown without pesticides. Rich in nutrients and perfect for salads.",
-        unitPrice: 4.49,
-        originalPrice: 6.99,
-        discountPercentage: 35,
-        unit: "bag",
-        quantity: 30.0,
-        images: ["/images/spinach.svg"],
-        farmName: "Green Leaf Gardens",
-        category: "HERBS_SPICES",
-        sku: "SPN-PROMO-002",
-      },
-    ],
-  }
+// Mock products data
+async function getProductsData() {
+  return [
+    {
+      id: "1",
+      productName: "Fresh Organic Tomatoes",
+      unitPrice: 4.99,
+      unit: "kg",
+      bonus: 10,
+      createdBy: "Green Farm Co.",
+      expiryDate: new Date("2024-12-31"),
+      images:["/images/farmer-market.jpg"],
+      quantity: 50,
+      sku: "TOM001",
+      category: "VEGETABLES" as const,
+      rating: 4.8,
+      soldCount: 127,
+    },
+    {
+      id: "2",
+      productName: "Premium Carrots Bundle",
+      unitPrice: 3.49,
+      unit: "kg",
+      bonus: 5,
+      createdBy: "Sunrise Farms",
+      expiryDate: new Date("2024-12-25"),
+      images: ["/images/farmer-market.jpg"],
+      quantity: 75,
+      sku: "CAR001",
+      category: "VEGETABLES" as const,
+      rating: 4.6,
+      soldCount: 89,
+    },
+    {
+      id: "3",
+      productName: "Fresh Lettuce Heads",
+      unitPrice: 2.99,
+      unit: "piece",
+      bonus: 0,
+      createdBy: "Valley Gardens",
+      expiryDate: new Date("2024-12-20"),
+      images: ["/images/products.jpg"],
+      quantity: 30,
+      sku: "LET001",
+      category: "VEGETABLES" as const,
+      rating: 4.5,
+      soldCount: 45,
+    },
+    {
+      id: "4",
+      productName: "Organic Potatoes",
+      unitPrice: 2.49,
+      unit: "kg",
+      bonus: 15,
+      createdBy: "Mountain Harvest",
+      expiryDate: new Date("2025-01-15"),
+      images: ["/images/Tomatoes.svg"],
+      quantity: 100,
+      sku: "POT001",
+      category: "TUBERS" as const,
+      rating: 4.7,
+      soldCount: 203,
+    },
+    {
+      id: "5",
+      productName: "Premium Carrots Bundle",
+      unitPrice: 3.49,
+      unit: "kg",
+      bonus: 5,
+      createdBy: "Sunrise Farms",
+      expiryDate: new Date("2024-12-25"),
+      images: ["/images/farmer-market.jpg"],
+      quantity: 75,
+      sku: "CAR001",
+      category: "VEGETABLES" as const,
+      rating: 4.6,
+      soldCount: 89,
+    },
+    {
+      id: "6",
+      productName: "Premium Carrots Bundle",
+      unitPrice: 3.49,
+      unit: "kg",
+      bonus: 5,
+      createdBy: "Sunrise Farms",
+      expiryDate: new Date("2024-12-25"),
+      images: ["/images/farmer-market.jpg"],
+      quantity: 75,
+      sku: "CAR001",
+      category: "VEGETABLES" as const,
+      rating: 4.6,
+      soldCount: 89,
+    },
+    {
+      id: "7",
+      productName: "Premium Carrots Bundle",
+      unitPrice: 3.49,
+      unit: "kg",
+      bonus: 5,
+      createdBy: "Sunrise Farms",
+      expiryDate: new Date("2024-12-25"),
+      images: ["/images/product2.jpg"],
+      quantity: 75,
+      sku: "CAR001",
+      category: "VEGETABLES" as const,
+      rating: 4.6,
+      soldCount: 89,
+    },
+    {
+      id: "8",
+      productName: "Premium Carrots Bundle",
+      unitPrice: 3.49,
+      unit: "kg",
+      bonus: 5,
+      createdBy: "Sunrise Farms",
+      expiryDate: new Date("2024-12-25"),
+      images: ["/images/egges.svg"],
+      quantity: 75,
+      sku: "CAR001",
+      category: "VEGETABLES" as const,
+      rating: 4.6,
+      soldCount: 89,
+    },
+  ]
 }
 
 export default async function LandingPage() {
-  // Fetch all data in parallel
-  const [homeData, featuredProductsData, promotionsData] = await Promise.all([
-    getHomeData(),
-    getFeaturedProductsData(),
-    getPromotionsData(),
-  ])
+  const homeData = await getHomeData()
+  const products = await getProductsData()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50/30 to-orange-50/30 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-green-50/30 to-orange-50/30 relative  overflow-hidden">
       {/* Background decorative circles */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-green-100/20 rounded-full -translate-y-32 translate-x-16"></div>
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange-100/30 rounded-full translate-y-32 -translate-x-16"></div>
+      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-orange-100/30 rounded-full translate-y-32 translate-x-16"></div>
 
-      {/* Header Component - Sticky */}
-      {/* <Header /> */}
+      <Home data={homeData}/>
 
-      {/* Page Sections */}
-      <Home data={homeData} />
-      <HowItWorks />
-      <FeaturedProducts data={featuredProductsData} />
-       <Promotions data={promotionsData} />
-      <WhyChoose />
-      <ContactUs />
+      <section className="py-16 px-4 max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Products We Offer</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Discover our selection of premium fresh produce, delivered directly from trusted local farms to your
+            restaurant.
+          </p>
+        </div>
+        <ProductGrid products={products} />
+      </section>
     </div>
   )
 }

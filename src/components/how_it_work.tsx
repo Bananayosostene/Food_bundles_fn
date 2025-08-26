@@ -1,6 +1,6 @@
 import { User, Search, Utensils } from "lucide-react"
 
-export default function HowItWorks() {
+export  function HowItWork() {
   return (
     <section id="how-it-works" className="relative z-10 px-8 py-16 bg-gray-50/50">
       <div className="max-w-6xl mx-auto">

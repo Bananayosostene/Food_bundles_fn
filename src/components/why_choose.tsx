@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { CheckCircle, Truck, DollarSign, Users, Leaf, Clock } from "lucide-react"
 
-export default function WhyChoose() {
+export function WhyChoose() {
   return (
     <section className="relative z-10 px-8 py-16 bg-[#F9FAFB]">
       <div className="max-w-7xl mx-auto">
