@@ -34,7 +34,7 @@ const HomeData = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col text-white bg-gradient-to-b from-yellow-50 via-white to-white">
       <main className="flex-1">
         <Home data={HomeData} />
       </main>

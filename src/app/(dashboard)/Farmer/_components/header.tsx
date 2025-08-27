@@ -1,8 +1,9 @@
 "use client"
 
-import { Bell, User, Settings, LogOut } from "lucide-react"
+import { useState } from "react";
+import { Bell, User, ChevronDown, Settings, LogOut, Utensils } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { usePathname } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,52 +11,138 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Badge } from "@/components/ui/badge"
+import NotificationsDrawer from "./notification";
+
+const testNotifications = [
+  {
+    id: "1",
+    title: "Order Initiated",
+    message: "Your order with id #123-4568 has been initiated successfully",
+    orderId: "#123-4568",
+    timestamp: "12/12/2024 08:30 PM",
+    isRead: false,
+    type: "order_initiated" as const,
+  },
+  {
+    id: "2",
+    title: "Order Completed",
+    message: "Your order with id #123-4568 has been completed successfully",
+    orderId: "#123-4568",
+    timestamp: "12/12/2024 08:30 PM",
+    isRead: true,
+    type: "order_completed" as const,
+  },
+  {
+    id: "3",
+    title: "Payment Received",
+    message: "Payment for order #123-4568 has been received",
+    orderId: "#123-4568",
+    timestamp: "12/12/2024 08:30 PM",
+    isRead: true,
+    type: "payment_received" as const,
+  },
+  {
+    id: "4",
+    title: "Order Cancelled",
+    message: "Your order with id #123-4569 has been cancelled",
+    orderId: "#123-4569",
+    timestamp: "12/12/2024 08:30 PM",
+    isRead: false,
+    type: "order_cancelled" as const,
+  },
+  {
+    id: "5",
+    title: "Order Initiated",
+    message: "Your order with id #123-4570 has been initiated successfully",
+    orderId: "#123-4570",
+    timestamp: "12/12/2024 08:30 PM",
+    isRead: false,
+    type: "order_initiated" as const,
+  },
+];
 
 export default function DashboardHeader() {
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const unreadCount = testNotifications.filter((n) => !n.isRead).length;
+  const pathname = usePathname();
+  
   return (
-    <header className="bg-white border-b border-gray-200 px-4 sm:px-6 lg:px-8 xl:px-16 py-4 sm:py-6 lg:py-8">
-      <div className="flex items-center justify-between">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate">Farmer Dashboard</h1>
-          <p className="text-sm sm:text-base text-gray-600 mt-1 hidden sm:block lg:block">
-            Welcome back, Sosten! Here what happening with your products.
-          </p>
-          <p className="text-sm text-gray-600 mt-1 block sm:hidden">Welcome back, Sosten!</p>
-        </div>
+    <>
+    <header className="bg-white border-b border-green-200 sticky top-0 z-50 h-16 shadow-sm">
+      <div className="container mx-auto px-6">
+        <div className="flex items-center justify-between h-16">
+          {/* Left side - Brand */}
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+              <Utensils className="h-5 w-5 text-white" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-bold text-gray-900">
+                Food bundles
+              </span>
+              <p className="text-xs text-gray-500 hidden sm:block">Welcome back, Sosten!</p>
+            </div>
+          </div>
 
-        <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 ml-4">
-          <Button variant="ghost" size="icon" className="relative h-8 w-8 sm:h-10 sm:w-10">
-            <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full"></span>
-          </Button>
+          {/* Right side - Notifications and Profile */}
+          <div className="flex items-center gap-3">
+            {/* Notification Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative hover:bg-green-300 transition-colors duration-200"
+              onClick={() => setIsNotificationsOpen(true)}
+            >
+              <Bell className="h-5 w-5 text-gray-600" />
+              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-red-500 text-white text-xs border-2 border-white">
+                  {unreadCount}
+              </Badge>
+            </Button>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 rounded-full">
-                <Avatar className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12">
-                  <AvatarImage src="/images/Michael.svg?height=32&width=32" />
-                  <AvatarFallback className="text-xs sm:text-sm">BS</AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48 sm:w-56" align="end" forceMount>
-              <DropdownMenuItem>
-                <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Logout</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            {/* Profile Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  className="flex items-center gap-2 hover:bg-green-250 transition-colors duration-200 px-3 py-2 h-auto"
+                >
+                  <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-md">
+                    <span className="text-white text-sm font-medium">E</span>
+                  </div>
+                  <span className="font-medium text-gray-700 hidden sm:block">Elia</span>
+                  <ChevronDown className="h-4 w-4 text-gray-500 transition-transform duration-200" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48 sm:w-56 hover:bg-green-100" align="end" forceMount>
+                <div className="px-3 py-2 border-b border-gray-100 ">
+                  <p className="text-sm font-medium text-gray-900">Elia</p>
+                  <p className="text-xs text-gray-500">elia@food.rw</p>
+                </div>
+                <DropdownMenuItem className="cursor-pointer">
+                  <User className="mr-3 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer hover:bg-green-300">
+                  <Settings className="mr-3 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 hover:bg-green-300">
+                  <LogOut className="mr-3 h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
     </header>
+     <NotificationsDrawer
+            isOpen={isNotificationsOpen}
+            onClose={() => setIsNotificationsOpen(false)}
+            notifications={testNotifications}
+          />
+     </>
   )
 }

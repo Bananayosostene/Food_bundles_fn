@@ -3,6 +3,7 @@
 import DashboardHeader from "./_components/header"
 import StatsCards from "./_components/stats-cards"
 import ProductManagement from "./_components/product-management"
+import { ProductProvider } from "./_components/product-context"
 
 export default function FarmerDashboard() {
   return (
@@ -20,8 +21,9 @@ export default function FarmerDashboard() {
             {/* Stats Cards */}
             <StatsCards />
 
-            {/* Product Management */}
+            <ProductProvider>
             <ProductManagement />
+            </ProductProvider>
           </div>
         </div>
       </div>

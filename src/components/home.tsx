@@ -7,17 +7,17 @@ import { useEffect, useRef, useState } from "react"
 const slides = [
   {
     image: "/images/farmer-market.jpg",
-    title: "Fresh Organic Foods",
-    description: "Delivered from local farms to your restaurant.",
+    title: "FOOD BUNDLES",
+    description: "Connect Your Restaurant to Our Farm.",
   },
   {
     image: "/images/products.jpg",
-    title: "Groceries & Essentials",
+    title: "FOOD BUNDLES",
     description: "Get groceries, drinks, and essentials instantly.",
   },
   {
     image: "/images/egges.svg",
-    title: "Premium Quality",
+    title: "FOOD BUNDLES",
     description: "Top-quality fresh produce every time.",
   },
 ];
@@ -121,10 +121,10 @@ useEffect(() => {
         priority
       />
       <div
-        className="absolute top-0 right-0 h-full w-1/2"
+        className="absolute top-0 right- h-full w-1/1"
         style={{
           background:
-            "linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)",
+            "linear-gradient(to left, rgba(246, 229, 191, 1) 0%, rgba(255,255,255,0) 100%)",
         }}
       ></div>
     </div>
@@ -136,7 +136,7 @@ useEffect(() => {
               <div className="space-y-8 order-1 lg:order-1  ">
                 <div className="space-y-6">
                   <h1
-  className={`text-5xl lg:text-7xl font-bold text-gray-900 leading-[1.1] transition-all duration-1000 ease-out ${
+  className={`text-5xl lg:text-7xl font-bold text-[#fffff] leading-[1.1] transition-all duration-1000 ease-out ${
     isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
   }`}
 >
@@ -144,7 +144,7 @@ useEffect(() => {
 </h1>
 
 <p
-  className={`text-lg text-gray-600 max-w-lg leading-relaxed transition-all duration-1000 ease-out ${
+  className={`text-lg text-[#fffff] max-w-lg leading-relaxed transition-all duration-1000 ease-out ${
     isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
   }`}
 >
@@ -152,7 +152,7 @@ useEffect(() => {
 </p>
 
                   <p
-                    className={`text-lg text-gray-600 max-w-lg leading-relaxed transition-all duration-1000 ease-out ${
+                    className={`text-lg text- max-w-lg leading-relaxed transition-all duration-1000 ease-out ${
                       isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                     }`}
                     style={{
@@ -201,7 +201,7 @@ useEffect(() => {
 
                 {/* Small decorative star */}
                   <div
-                  className={`absolute bottom-16 right-120 z-20 transition-all duration-1200 ease-out ${
+                  className={`absolute bottom-16 right-140 z-20 transition-all duration-1200 ease-out ${
                     isVisible && imageLoaded
                       ? "translate-y-0 opacity-100 rotate-0"
                       : "translate-y-8 opacity-0 -rotate-12"
@@ -241,7 +241,7 @@ useEffect(() => {
                       transitionDelay: isVisible ? "1000ms" : "0ms",
                     }}
                   >
-                    <div className="w-80 h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden border-4 border-white shadow-2xl transform hover:scale-105 transition-transform duration-500 ease-out">
+                    <div className="w-60 h-12 lg:w-96 lg:h-126 rounded-2xl overflow-hidden border-4 border-gray shadow-2xl transform hover:scale-105 transition-transform duration-500 ease-out -mt-12 lg:mr-0 ">
                       <Image
                         src={data.heroImage?.src || "/placeholder.svg"}
                         alt={data.heroImage?.alt || "Hero image"}
@@ -293,7 +293,7 @@ useEffect(() => {
 
       <div
         className={`absolute bottom-1/3 left-1/4 w-6 h-6 border-2 border-orange-300 rounded-full transition-all duration-1500 ease-out ${
-          isVisible ? "opacity-40 scale-100 -rotate-45" : "opacity-0 scale-50 rotate-0"
+          isVisible ? "opacity-80 scale-800 -rotate-45" : "opacity-0 scale-50 rotate-0"
         }`}
         style={{
           transitionDelay: isVisible ? "2000ms" : "0ms",

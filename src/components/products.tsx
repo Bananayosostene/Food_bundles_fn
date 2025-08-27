@@ -59,8 +59,6 @@ export default function ProductGrid({ products }: Props) {
             </SelectContent>
           </Select>
         </div>
-
-        <p className="text-sm text-gray-600">Showing {filteredProducts.length} products</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

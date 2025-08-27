@@ -68,9 +68,6 @@ export function ProductCard({ product }: Props) {
     localStorage.setItem("cart", JSON.stringify(existingCart))
     setCartQuantity(1)
     setIsLoading(false)
-
-    // Show success message
-    alert(`${product.productName} added to cart!`)
   }
 
   const incrementQuantity = () => {
