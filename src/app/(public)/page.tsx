@@ -169,8 +169,8 @@ export default async function LandingPage() {
       <Home data={homeData}/>
 
       <section className="py-16 px-4 max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Products We Offer</h2>
+        <div className="text-center mb-12 text-white ">
+          <h2 className="text-3xl font-bold text mb-4">Products We Offer</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Discover our selection of premium fresh produce, delivered directly from trusted local farms to your
             restaurant.

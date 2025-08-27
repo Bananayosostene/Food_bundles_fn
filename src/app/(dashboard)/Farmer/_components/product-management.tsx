@@ -1,13 +1,26 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Plus, MapPin, Eye, Trash2, Calendar } from "lucide-react"
+import { Plus, Calendar, Eye, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import Image from "next/image"
 import ProductSubmissionModal from "./product-submission-modal"
-import { useProducts, type Product } from "./product-context"
+import { DataTable } from "@/components/data-table"
+import { productColumns } from "./product-columns"
+
+interface Product {
+  id: string
+  name: string
+  category: string
+  quantity: string
+  submittedDate: string
+  price: string
+  status: string
+  statusColor: string
+  image: string
+  location: string
+  priceValue: number
+}
 
 interface productSubmitData {
   productName: string
@@ -19,30 +32,72 @@ interface productSubmitData {
 }
 
 export default function ProductManagement() {
-  const { products, addProduct, deleteProduct } = useProducts()
+  // Sample data to replace external context
+  const [products, setProducts] = useState<Product[]>([
+    {
+      id: "1",
+      name: "Organic Tomatoes",
+      category: "Vegetables",
+      quantity: "10 kg",
+      submittedDate: "2024-01-15",
+      price: "RWF 5000.00",
+      status: "Approved",
+      statusColor: "bg-green-100 text-green-800",
+      image: "/placeholder.svg?height=48&width=48&text=Tomato",
+      location: "Kigali, Rwanda",
+      priceValue: 5000
+    },
+    {
+      id: "2",
+      name: "Fresh Bananas",
+      category: "Fruits",
+      quantity: "25 bunches",
+      submittedDate: "2024-01-12",
+      price: "RWF 7500.00",
+      status: "Pending",
+      statusColor: "bg-yellow-100 text-yellow-800",
+      image: "/placeholder.svg?height=48&width=48&text=Banana",
+      location: "Kigali, Rwanda",
+      priceValue: 7500
+    },
+    {
+      id: "3",
+      name: "White Rice",
+      category: "Grains",
+      quantity: "50 kg",
+      submittedDate: "2024-01-10",
+      price: "RWF 15000.00",
+      status: "Verified",
+      statusColor: "bg-blue-100 text-blue-800",
+      image: "/placeholder.svg?height=48&width=48&text=Rice",
+      location: "Kigali, Rwanda",
+      priceValue: 15000
+    }
+  ])
+
   const [selectedStatus, setSelectedStatus] = useState<string>("All")
-  const [searchTerm, setSearchTerm] = useState("")
   const [showSubmissionModal, setShowSubmissionModal] = useState(false)
   const [dateFilter, setDateFilter] = useState("")
   const [showDateFilter, setShowDateFilter] = useState(false)
-
-  console.log("ProductManagement rendered, products:", products.length)
+  const [searchTerm, setSearchTerm] = useState("")
 
   const statusOptions = ["All", "Pending", "Verified", "Approved", "Paid"]
 
   const filteredProducts = products.filter((product) => {
     const matchesStatus = selectedStatus === "All" || product.status === selectedStatus
-    const matchesSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.location.toLowerCase().includes(searchTerm.toLowerCase())
-
     const matchesDate = !dateFilter || product.submittedDate === dateFilter
-
-    return matchesStatus && matchesSearch && matchesDate
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.category.toLowerCase().includes(searchTerm.toLowerCase())
+    return matchesStatus && matchesDate && matchesSearch
   })
 
-  console.log("Filtered products:", filteredProducts.length)
+  const addProduct = (product: Product) => {
+    setProducts(prev => [...prev, product])
+  }
+
+  const deleteProduct = (productId: string) => {
+    setProducts(prev => prev.filter(p => p.id !== productId))
+  }
 
   const handleProductSubmit = (data: productSubmitData) => {
     const newProduct: Product = {
@@ -50,20 +105,15 @@ export default function ProductManagement() {
       name: data.productName,
       category: data.category.replace("_", " & "),
       quantity: `${data.quantity} ${data.unit}`,
-      submittedDate: new Date().toISOString().split("T")[0], // Auto-generate current date
+      submittedDate: new Date().toISOString().split("T")[0],
       price: `RWF ${data.wishedPrice.toFixed(2)}`,
       status: "Pending",
       statusColor: "bg-yellow-100 text-yellow-800",
-      image:
-        data.images.length > 0
-          ? URL.createObjectURL(data.images[0])
-          : "/placeholder.svg?height=48&width=48&text=No+Image",
-      location: "Kigali, Rwanda", // Default location from farmer's registration
+      image: "/placeholder.svg?height=48&width=48&text=Product",
+      location: "Kigali, Rwanda",
       priceValue: data.wishedPrice,
     }
-
     addProduct(newProduct)
-    console.log("Product submitted:", data)
     setShowSubmissionModal(false)
   }
 
@@ -74,226 +124,103 @@ export default function ProductManagement() {
   }
 
   const handleViewDetails = (product: Product) => {
-    console.log("Viewing product details:", product)
     alert(
-      `Product Details:\nName: ${product.name}\nCategory: ${product.category}\nPrice: ${product.price}\nStatus: ${product.status}`,
+      `Product Details:\nName: ${product.name}\nCategory: ${product.category}\nPrice: ${product.price}\nStatus: ${product.status}`
     )
   }
 
   return (
-    <div className="w-full max-w-full overflow-hidden">
+    <div className="container mx-auto px-6 pt-8 mt-4">
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
         {/* Header */}
-        <div className="p-4 sm:p-6 border-b border-gray-200">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-4">
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Product Management</h2>
+        <div className="p-4 sm:p-6 border-b border-gray-200 flex items-center justify-between">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Product Management</h2>
+          <Button
+            onClick={() => setShowSubmissionModal(true)}
+            className="bg-green-600 hover:bg-green-700 text-white"
+          >
+            <Plus className="w-4 h-4 mr-2" /> Submit Product
+          </Button>
+        </div>
+
+        {/* Status Filter */}
+        <div className="flex flex-wrap gap-2 p-4">
+          {statusOptions.map((status) => (
             <Button
-              onClick={() => setShowSubmissionModal(true)}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-2 rounded-lg font-medium flex items-center gap-2 w-full sm:w-auto justify-center"
+              key={status}
+              variant="outline"
+              size="sm"
+              onClick={() => setSelectedStatus(status)}
+              className={
+                selectedStatus === status
+                  ? "bg-green-600 text-white border-green-600"
+                  : "bg-transparent text-gray-600 border-gray-300 hover:bg-gray-50"
+              }
             >
-              <Plus className="w-4 h-4" />
-              Submit Product
+              {status} ({status === "All" ? products.length : products.filter((p) => p.status === status).length})
             </Button>
-          </div>
+          ))}
+        </div>
 
-          {/* Status Filter Buttons */}
-          <div className="flex flex-wrap gap-2 mb-4">
-            {statusOptions.map((status) => (
-              <Button
-                key={status}
-                variant="outline"
-                size="sm"
-                onClick={() => setSelectedStatus(status)}
-                className={`transition-all duration-200 text-xs sm:text-sm ${
-                  selectedStatus === status
-                    ? "bg-green-600 text-white border-green-600"
-                    : "bg-transparent text-gray-600 border-gray-300 hover:bg-gray-50"
-                }`}
-              >
-                {status}
-                <span className="ml-1 sm:ml-2 text-xs">
-                  ({status === "All" ? products.length : products.filter((p) => p.status === status).length})
-                </span>
-              </Button>
-            ))}
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
-            <div className="relative flex-1 max-w-full sm:max-w-sm">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+        {/* Search and Date Filter */}
+        <div className="p-4 border-b border-gray-200 space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
               <Input
                 placeholder="Search products..."
-                className="pl-10 w-full"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full"
               />
             </div>
-
-            <div className="flex flex-col sm:flex-row gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowDateFilter(!showDateFilter)}
-                className="flex items-center gap-2 justify-center"
-              >
-                <Calendar className="w-4 h-4" />
-                <span className="hidden sm:inline">Filter by Date</span>
-                <span className="sm:hidden">Date</span>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => setShowDateFilter(!showDateFilter)}>
+                <Calendar className="w-4 h-4 mr-1" /> Filter by Date
               </Button>
-
               {dateFilter && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setDateFilter("")}
-                  className="text-red-600 hover:text-red-700 justify-center"
-                >
+                <Button variant="outline" size="sm" onClick={() => setDateFilter("")} className="text-red-600">
                   Clear Filter
                 </Button>
               )}
             </div>
           </div>
-
           {showDateFilter && (
-            <div className="mt-4 max-w-full sm:max-w-sm">
-              <Input
-                type="date"
-                placeholder="Filter by date"
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
-                className="w-full"
-              />
+            <div className="max-w-xs">
+              <Input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} />
             </div>
           )}
         </div>
 
-        {/* Table */}
+        {/* Products Table */}
         <div className="overflow-x-auto">
-          <div className="min-w-full">
-            <table className="w-full min-w-[800px]">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Image
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Product
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
-                    Category
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
-                    Location
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Quantity
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
-                    Date
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Price
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredProducts.length === 0 ? (
-                  <tr>
-                    <td colSpan={9} className="px-3 sm:px-6 py-8 text-center text-gray-500 text-sm">
-                      {searchTerm || dateFilter
-                        ? `No products found matching the current filters`
-                        : selectedStatus === "All"
-                          ? "No products found. Click 'Submit Product' to add your first product."
-                          : `No ${selectedStatus.toLowerCase()} products found`}
-                    </td>
-                  </tr>
-                ) : (
-                  filteredProducts.map((product) => (
-                    <tr key={product.id} className="hover:bg-gray-50">
-                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
-                          <Image
-                            src={product.image || "/placeholder.svg"}
-                            alt={product.name}
-                            width={48}
-                            height={48}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-3 sm:px-6 py-4">
-                        <div>
-                          <div className="font-medium text-gray-900 text-sm sm:text-base truncate max-w-[120px] sm:max-w-none">
-                            {product.name}
-                          </div>
-                          <div className="text-xs sm:text-sm text-gray-500">ID: {product.id}</div>
-                          <div className="sm:hidden text-xs text-gray-500 mt-1">{product.category}</div>
-                        </div>
-                      </td>
-                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-gray-600 text-sm hidden sm:table-cell">
-                        {product.category}
-                      </td>
-                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap hidden md:table-cell">
-                        <div className="flex items-center text-gray-600">
-                          <MapPin className="w-4 h-4 mr-1 text-gray-400" />
-                          <span className="text-sm truncate max-w-[100px]">{product.location}</span>
-                        </div>
-                      </td>
-                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-gray-600 text-sm">{product.quantity}</td>
-                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-gray-600 text-sm hidden lg:table-cell">
-                        {product.submittedDate}
-                      </td>
-                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap font-medium text-sm">{product.price}</td>
-                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
-                        <Badge className={`${product.statusColor} border-0 text-xs`}>{product.status}</Badge>
-                      </td>
-                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-1 sm:gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleViewDetails(product)}
-                            className="flex items-center gap-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 text-xs px-2 py-1"
-                          >
-                            <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span className="hidden sm:inline">View</span>
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleDeleteProduct(product.id)}
-                            className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:bg-red-50 text-xs px-2 py-1"
-                          >
-                            <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span className="hidden sm:inline">Delete</span>
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+         <div className="p-4">
+          <DataTable
+            columns={productColumns(handleViewDetails, handleDeleteProduct)}
+            data={filteredProducts}
+            searchKey="name"
+            searchPlaceholder="Search products..."
+            showSearch
+            showColumnVisibility
+            showPagination
+            showRowSelection={false}
+          />
         </div>
-
-        {/* Footer */}
-        <div className="px-4 sm:px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <p className="text-xs sm:text-sm text-gray-600">
-            Showing {filteredProducts.length} of {products.length} products
-            {selectedStatus !== "All" && ` (filtered by ${selectedStatus})`}
-            {dateFilter && ` (filtered by date: ${dateFilter})`}
-          </p>
+          
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-12">
+              <div className="text-gray-500 mb-2">No products found</div>
+              <div className="text-sm text-gray-400">
+                {searchTerm || dateFilter || selectedStatus !== "All" 
+                  ? "Try adjusting your filters"
+                  : "Start by submitting your first product"
+                }
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Product Submission Modal */}
+      {/* Simple Modal */}
       <ProductSubmissionModal
         isOpen={showSubmissionModal}
         onClose={() => setShowSubmissionModal(false)}

@@ -1,7 +1,8 @@
 "use client"
 
-import { Leaf, Menu } from "lucide-react"
+import { Leaf, Menu, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react"
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -14,6 +15,15 @@ import { cn } from "@/lib/utils"
 import Image from "next/image"
 
 export default function Header() {
+
+    const [cartCount, setCartCount] = useState(0)
+
+  // ← CHANGED: load cart count from localStorage on mount
+  useEffect(() => {
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]")
+    setCartCount(cart.reduce((sum: number, item: any) => sum + item.quantity, 0))
+  }, [])
+
   // Function to scroll to section on the same page
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
@@ -108,7 +118,16 @@ export default function Header() {
         </NavigationMenu>
 
         {/* Desktop Action Buttons */}
-        <div className="hidden md:flex items-center gap-2 lg:gap-3 flex-shrink-0">
+          <div className="hidden md:flex items-center gap-3 lg:gap-4 flex-shrink-0">
+
+           <div className="relative cursor-pointer">
+            <ShoppingCart className="w-8 h-8 text-gray-700 hover:text-green-600" />
+            {cartCount > 0 && ( // only show if cart > 0
+              <span className="absolute -top-2 -right-2 bg-green-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                {cartCount}
+              </span>
+            )}
+          </div>
           <Button
             variant="outline"
             size="sm"
@@ -126,7 +145,7 @@ export default function Header() {
           </Button>
         </div>
 
-        {/* Mobile Menu */}
+       
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="lg:hidden flex-shrink-0 h-8 w-8 sm:h-9 sm:w-9">
@@ -138,7 +157,7 @@ export default function Header() {
             <SheetHeader>
               <SheetTitle className="flex items-center gap-2">
                 <div className="w-6 h-6 bg-green-600 rounded-sm flex items-center justify-center">
-                  <Leaf className="w-4 h-4 text-white" />
+                  <Leaf className="w-5 h-4 text-white" />
                 </div>
                 FoodBundle
               </SheetTitle>
