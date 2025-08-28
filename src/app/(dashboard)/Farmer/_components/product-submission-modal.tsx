@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { productSubmissionService } from "@/app/services/productSubmissionService"
+import { Textarea } from "@/components/ui/textarea"
 
 export interface ProductSubmissionData {
   productName: string
@@ -72,33 +74,40 @@ export default function ProductSubmissionModal({ isOpen, onClose, onSubmit }: Pr
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
 
-    if (!validateForm()) return
+  if (!validateForm()) return
 
-    setIsSubmitting(true)
+  setIsSubmitting(true)
 
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+  try {
+    const response = await productSubmissionService.submitProduct(formData)
+
+    if (response.success) {
       onSubmit(formData)
-
-      // Reset form
-      setFormData({
-        productName: "",
-        category: "",
-        quantity: 0,
-        unit: "kg",
-        wishedPrice: 0,
-      })
-      setErrors({})
-    } catch (error) {
-      console.error("Submission error:", error)
-    } finally {
-      setIsSubmitting(false)
+      toast.success("Product submitted successfully!")
+    } else {
+      toast.error(response.message || "Failed to submit product")
     }
+
+    // Reset form
+    setFormData({
+      productName: "",
+      category: "",
+      quantity: 0,
+      unit: "kg",
+      wishedPrice: 0,
+    })
+    setErrors({})
+    onClose()
+  } catch (error: any) {
+    console.error("Submission error:", error)
+    toast.error(error.response?.data?.message || "Something went wrong")
+  } finally {
+    setIsSubmitting(false)
   }
+}
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
