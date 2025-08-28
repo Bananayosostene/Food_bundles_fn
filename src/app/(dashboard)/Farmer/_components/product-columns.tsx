@@ -4,28 +4,12 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Eye, Trash2, MapPin } from "lucide-react"
-import Image from "next/image"
 import { Product } from "./product-context"
 
 export const productColumns = (
   handleViewDetails: (p: Product) => void,
   handleDeleteProduct: (id: string) => void
 ): ColumnDef<Product>[] => [
-  {
-    accessorKey: "image",
-    header: "Image",
-    cell: ({ row }) => (
-      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
-        <Image
-          src={row.original.image}
-          alt={row.original.name}
-          width={48}
-          height={48}
-          className="w-full h-full object-cover"
-        />
-      </div>
-    ),
-  },
   {
     accessorKey: "name",
     header: "Product",
@@ -100,4 +84,3 @@ export const productColumns = (
     ),
   },
 ]
- 
