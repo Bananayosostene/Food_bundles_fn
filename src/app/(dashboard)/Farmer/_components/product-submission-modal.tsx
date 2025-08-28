@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { productSubmissionService } from "@/app/services/productSubmissionService"
-
+import { Badge } from "@/components/ui/badge"
+import Image from "next/image"
 
 export interface ProductSubmissionData {
   productName: string
@@ -91,23 +91,23 @@ export default function ProductSubmissionModal({ isOpen, onClose, onSubmit }: Pr
       toast.error(response.message || "Failed to submit product")
     }
 
-    // Reset form
-    setFormData({
-      productName: "",
-      category: "",
-      quantity: 0,
-      unit: "kg",
-      wishedPrice: 0,
-    })
-    setErrors({})
-    onClose()
-  } catch (error: any) {
-    console.error("Submission error:", error)
-    toast.error(error.response?.data?.message || "Something went wrong")
-  } finally {
-    setIsSubmitting(false)
+      // Reset form
+      setFormData({
+        productName: "",
+        category: "",
+        quantity: 0,
+        unit: "kg",
+        wishedPrice: 0,
+        images: [],
+      })
+      setPreviewImages([])
+      setErrors({})
+    } catch (error) {
+      console.error("Submission error:", error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
-}
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
