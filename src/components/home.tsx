@@ -11,7 +11,7 @@ const slides = [
     description: "Connect Your Restaurant to Our Farm.",
   },
   {
-    image: "/images/products.jpg",
+    image: "/images/product2.jpg",
     title: "FOOD BUNDLES",
     description: "Get groceries, drinks, and essentials instantly.",
   },

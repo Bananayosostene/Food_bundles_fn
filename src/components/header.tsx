@@ -67,18 +67,7 @@ export default function Header() {
                 Products
               </NavigationMenuLink>
             </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                href="/promotions"
-            
-                className={cn(
-                  "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-                  "text-gray-700 hover:text-green-600",
-                )}
-              >
-                Promotion
-              </NavigationMenuLink>
-            </NavigationMenuItem>
+          
             <NavigationMenuItem>
               <NavigationMenuLink
                 href="/how-it-works"
@@ -110,7 +99,7 @@ export default function Header() {
                   "text-gray-700 hover:text-green-600",
                 )}
               >
-                Contact
+                Get Support
               </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
@@ -172,12 +161,6 @@ export default function Header() {
                 Home
               </button>
               <button
-                onClick={() => scrollToSection("featured-products")}
-                className="flex items-center py-2 text-base font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
-              >
-                Products
-              </button>
-              <button
                 onClick={() => scrollToSection("how-it-works")}
                 className="flex items-center py-2 text-base font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
               >
@@ -193,7 +176,7 @@ export default function Header() {
                 onClick={() => scrollToSection("contact-us")}
                 className="flex items-center py-2 text-base font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
               >
-                Contact
+                Get Support
               </button>
               <div className="flex flex-col gap-3 pt-4 border-t">
                 <Button
