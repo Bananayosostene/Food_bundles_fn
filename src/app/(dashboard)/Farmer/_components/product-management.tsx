@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Plus, Calendar, Eye, Trash2 } from "lucide-react"
+import { Plus, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import ProductSubmissionModal from "./product-submission-modal"
+import ProductSubmissionModal, { ProductSubmissionData } from "./product-submission-modal"
 import { DataTable } from "@/components/data-table"
 import { productColumns } from "./product-columns"
 
@@ -20,15 +20,6 @@ interface Product {
   image: string
   location: string
   priceValue: number
-}
-
-interface productSubmitData {
-  productName: string
-  category: string
-  quantity: number
-  unit: string
-  wishedPrice: number
-  images: File[]
 }
 
 export default function ProductManagement() {
@@ -99,7 +90,7 @@ export default function ProductManagement() {
     setProducts(prev => prev.filter(p => p.id !== productId))
   }
 
-  const handleProductSubmit = (data: productSubmitData) => {
+  const handleProductSubmit = (data: ProductSubmissionData) => {
     const newProduct: Product = {
       id: (products.length + 1).toString(),
       name: data.productName,
