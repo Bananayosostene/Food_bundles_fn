@@ -65,7 +65,19 @@ export default function Header() {
                   "text-gray-700 hover:text-green-600",
                 )}
               >
-                Restaurants
+                Products
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                href="/how-it-works"
+                className={cn(
+                  "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50",
+                  "text-gray-700 hover:text-green-600",
+                )}
+              >
+                How It Works
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
@@ -121,6 +133,72 @@ export default function Header() {
             <Link href="/signup">Get Started</Link>
           </Button>
         </div>
+
+       
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="lg:hidden flex-shrink-0 h-8 w-8 sm:h-9 sm:w-9">
+              <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="sr-only">Toggle menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-[280px] sm:w-[320px]">
+            <SheetHeader>
+              <SheetTitle className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-green-600 rounded-sm flex items-center justify-center">
+                  <Leaf className="w-5 h-4 text-white" />
+                </div>
+                FoodBundle
+              </SheetTitle>
+              <SheetDescription>Connecting farms to tables with fresh, local produce</SheetDescription>
+            </SheetHeader>
+            <div className="grid gap-3 py-6">
+              <button
+                onClick={() => {
+                  window.scrollTo({ top: 0, behavior: "smooth" })
+                }}
+                className="flex items-center py-2 text-base font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
+              >
+                Home
+              </button>
+              <button
+                onClick={() => scrollToSection("how-it-works")}
+                className="flex items-center py-2 text-base font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
+              >
+                How It Works
+              </button>
+              <button
+                onClick={() => scrollToSection("why-choose")}
+                className="flex items-center py-2 text-base font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
+              >
+                About
+              </button>
+              <button
+                onClick={() => scrollToSection("contact-us")}
+                className="flex items-center py-2 text-base font-medium text-gray-700 hover:text-green-600 transition-colors text-left"
+              >
+                Get Support
+              </button>
+              <div className="flex flex-col gap-3 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  size="default"
+                  className="border-2 border-green-600 text-green-600 hover:bg-green-50 rounded-full font-medium bg-transparent"
+                  asChild
+                >
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button
+                  size="default"
+                  className="bg-green-600 hover:bg-green-700 text-white rounded-full font-medium"
+                  asChild
+                >
+                  <Link href="/signup">Get Started</Link>
+                </Button>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     </header>
   )
