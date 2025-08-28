@@ -8,8 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import Image from "next/image"
 
 export interface ProductSubmissionData {
   productName: string
@@ -74,22 +72,17 @@ export default function ProductSubmissionModal({ isOpen, onClose, onSubmit }: Pr
     return Object.keys(newErrors).length === 0
   }
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
 
-  if (!validateForm()) return
+    if (!validateForm()) return
 
-  setIsSubmitting(true)
+    setIsSubmitting(true)
 
-  try {
-    const response = await productSubmissionService.submitProduct(formData)
-
-    if (response.success) {
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000))
       onSubmit(formData)
-      toast.success("Product submitted successfully!")
-    } else {
-      toast.error(response.message || "Failed to submit product")
-    }
 
       // Reset form
       setFormData({
@@ -98,9 +91,7 @@ export default function ProductSubmissionModal({ isOpen, onClose, onSubmit }: Pr
         quantity: 0,
         unit: "kg",
         wishedPrice: 0,
-        images: [],
       })
-      setPreviewImages([])
       setErrors({})
     } catch (error) {
       console.error("Submission error:", error)
