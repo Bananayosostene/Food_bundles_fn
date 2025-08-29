@@ -1,15 +1,17 @@
-import Home from "@/components/home"
-import ProductGrid  from "@/components/products"
 
-// Mock data fetching function
+
+import Home from "@/components/home"
+import ProductGrid from "@/components/products"
+import WhatsAppChat from "../../components/whatsappchat"
+
+// Mock data fetching
 async function getHomeData() {
   return {
     title: "FOOD BUNDLES",
-    description:
-      "Connect Your Restaurant to Our Farm.",
+    description: "Connect Your Restaurant to Our Farm.",
     secondaryButton: {
-      text: "Shop Now →",
-      href: "/login",
+      text: "Shop As Guest →",
+      href: "#products",
     },
     heroImage: {
       src: "/images/serving.jpg",
@@ -17,14 +19,8 @@ async function getHomeData() {
     },
     decorativeElements: {
       stars: {
-        large: {
-          src: "/images/Vector 1.png",
-          alt: "Decorative Vector 1 star",
-        },
-        small: {
-          src: "/images/Vector 1.png",
-          alt: "Small decorative star",
-        },
+        large: { src: "/images/Vector 1.png", alt: "Decorative Vector 1 star" },
+        small: { src: "/images/Vector 1.png", alt: "Small decorative star" },
       },
     },
   }
@@ -140,44 +136,84 @@ async function getProductsData() {
     },
     {
       id: "8",
-      productName: "Premium Carrots Bundle",
-      unitPrice: 3.49,
-      unit: "kg",
-      bonus: 5,
-      createdBy: "Sunrise Farms",
-      expiryDate: new Date("2024-12-25"),
-      images: ["/images/egges.svg"],
-      quantity: 75,
-      sku: "CAR001",
+      productName: "Fresh Lettuce Heads",
+      unitPrice: 2.99,
+      unit: "piece",
+      bonus: 0,
+      createdBy: "Valley Gardens",
+      expiryDate: new Date("2024-12-20"),
+      images: ["/images/products.jpg"],
+      quantity: 30,
+      sku: "LET001",
       category: "VEGETABLES" as const,
-      rating: 4.6,
-      soldCount: 89,
+      rating: 4.5,
+      soldCount: 45,
+    },
+    {
+      id: "9",
+      productName: "Fresh Lettuce Heads",
+      unitPrice: 2.99,
+      unit: "piece",
+      bonus: 0,
+      createdBy: "Valley Gardens",
+      expiryDate: new Date("2024-12-20"),
+      images: ["/images/products.jpg"],
+      quantity: 30,
+      sku: "LET001",
+      category: "VEGETABLES" as const,
+      rating: 4.5,
+      soldCount: 45,
+    },
+{
+      id: "10",
+      productName: "Fresh Lettuce Heads",
+      unitPrice: 2.99,
+      unit: "piece",
+      bonus: 0,
+      createdBy: "Valley Gardens",
+      expiryDate: new Date("2024-12-20"),
+      images: ["/images/products.jpg"],
+      quantity: 30,
+      sku: "LET001",
+      category: "VEGETABLES" as const,
+      rating: 4.5,
+      soldCount: 45,
     },
   ]
 }
 
+// Landing Page Component
 export default async function LandingPage() {
   const homeData = await getHomeData()
   const products = await getProductsData()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50/30 to-orange-50/30 relative  overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-green-50/30 to-orange-50/30 relative overflow-hidden">
       {/* Background decorative circles */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-green-100/20 rounded-full -translate-y-32 translate-x-16"></div>
       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-orange-100/30 rounded-full translate-y-32 translate-x-16"></div>
 
-      <Home data={homeData}/>
+      {/* Hero Section */}
+      <Home data={homeData} />
 
-      <section className="py-16 px-4 max-w-7xl mx-auto">
-        <div className="text-center mb-12 text-white ">
-          <h2 className="text-3xl font-bold text mb-4">Products We Offer</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover our selection of premium fresh produce, delivered directly from trusted local farms to your
-            restaurant.
-          </p>
+      {/* Products Section */}
+      <section
+        id="products"
+        className="min-h-screen py-16 px-4 max-w-7xl mx-auto flex flex-col justify-start"
+      >
+        <div className="text-center mb-12 pt-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">
+            Products We Offer
+          </h2>
         </div>
-        <ProductGrid products={products} />
+        <div className="flex-1">
+          <ProductGrid products={products} />
+        </div>
       </section>
+
+      {/* WhatsApp Chat Icon */}
+      <WhatsAppChat phoneNumber="250789109526" />
     </div>
   )
+  
 }

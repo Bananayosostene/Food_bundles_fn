@@ -86,73 +86,91 @@ export default function Home({ data }: AnimatedHomeProps) {
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
-useEffect(() => {
-  const interval = setInterval(() => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  }, 5000); // 5s per slide
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000); // 5s per slide
 
-  return () => clearInterval(interval);
-}, []);
+    return () => clearInterval(interval);
+  }, []);
 
+  // Smooth scroll function
+  const handleScrollToProducts = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    const productsSection = document.getElementById('products')
+    if (productsSection) {
+      // Get the height of the viewport
+      const viewportHeight = window.innerHeight
+      // Get the position of the products section
+      const rect = productsSection.getBoundingClientRect()
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+      // Calculate the exact position to scroll to (top of products section)
+      const targetPosition = rect.top + scrollTop
+      
+      // Smooth scroll to the exact position
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      })
+    }
+  }
 
   return (
-<div
-  ref={sectionRef}
-  className="relative  h-screen overflow-hidden font-sans"
->
+    <div
+      ref={sectionRef}
+      className="relative h-screen overflow-hidden font-sans"
+    >
       {/* Hero Section */}
       {data && (
         <main className="relative z-10 px-8 py-12 h-full flex items-center justify-center">
           {/* Sliding Background */}
-          {/* Sliding Background */}
-<div className="absolute inset-0 -z-10 w-full h-full text-white">
-  {slides.map((slide, index) => (
-    <div
-      key={index}
-     className={`absolute inset-0 w-full h-full text-white transition-opacity duration-500ms  ${
-        index === currentSlide ? "opacity-100" : "opacity-0"
-      }`}
-    >
-      <Image
-        src={slide.image}
-        alt={slide.title}
-        fill
-        className="object-cover"
-        priority
-      />
-      <div
-        className="absolute top-0 right- h-full w-1/1"
-        style={{
-          background:
-            "linear-gradient(to left, rgba(246, 229, 191, 1) 0%, rgba(255,255,255,0) 100%)",
-        }}
-      ></div>
-    </div>
-  ))}
-</div>
+          <div className="absolute inset-0 -z-10 w-full h-full text-white">
+            {slides.map((slide, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 w-full h-full text-white transition-opacity duration-500 ${
+                  index === currentSlide ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <Image
+                  src={slide.image}
+                  alt={slide.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                <div
+                  className="absolute top-0 right-0 h-full w-full"
+                  style={{
+                    background:
+                      "linear-gradient(to left, rgba(246, 229, 191, 1) 0%, rgba(255,255,255,0) 100%)",
+                  }}
+                ></div>
+              </div>
+            ))}
+          </div>
           <div className="max-w-7xl mx-auto w-full">
             <div className="grid lg:grid-cols-2 gap-16 items-center h-full">
-          
-              <div className="space-y-8 order-1 lg:order-1  ">
+              <div className="space-y-8 order-1 lg:order-1">
                 <div className="space-y-6">
                   <h1
-  className={`text-5xl lg:text-7xl font-bold text-[#fffff] leading-[1.1] transition-all duration-1000 ease-out ${
-    isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-  }`}
->
-  {slides[currentSlide].title}
-</h1>
-
-<p
-  className={`text-lg text-[#fffff] max-w-lg leading-relaxed transition-all duration-1000 ease-out ${
-    isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-  }`}
->
-  {slides[currentSlide].description}
-</p>
+                    className={`text-5xl lg:text-7xl font-bold text-white leading-[1.1] transition-all duration-1000 ease-out ${
+                      isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+                    }`}
+                  >
+                    {slides[currentSlide].title}
+                  </h1>
 
                   <p
-                    className={`text-lg text- max-w-lg leading-relaxed transition-all duration-1000 ease-out ${
+                    className={`text-lg text-white max-w-lg leading-relaxed transition-all duration-1000 ease-out ${
+                      isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+                    }`}
+                  >
+                    {slides[currentSlide].description}
+                  </p>
+
+                  <p
+                    className={`text-lg text-white max-w-lg leading-relaxed transition-all duration-1000 ease-out ${
                       isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                     }`}
                     style={{
@@ -171,17 +189,19 @@ useEffect(() => {
                     transitionDelay: isVisible ? "600ms" : "0ms",
                   }}
                 >
-
-                  <Button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 text-lg rounded-full font-medium transform hover:scale-105 transition-all duration-300">
+                  <Button 
+                    onClick={handleScrollToProducts}
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 text-lg rounded-full font-medium transform hover:scale-105 transition-all duration-300 cursor-pointer"
+                  >
                     {data.secondaryButton?.text || "Secondary Button"}
                   </Button>
                 </div>
               </div>
 
               {/* Right Content - Restaurant Image in Circle */}
-              <div className="relative flex justify-center lg:justify-end order-2 ">
+              <div className="relative flex justify-center lg:justify-end order-2">
                 <div
-                  className={`absolute top-0 right-90 z-20 transition-all duration-1200 ease-out ${
+                  className={`absolute top-0 right-20 z-20 transition-all duration-1200 ease-out ${
                     isVisible && imageLoaded
                       ? "translate-y-0 opacity-100 rotate-0"
                       : "-translate-y-8 opacity-0 rotate-12"
@@ -200,8 +220,8 @@ useEffect(() => {
                 </div>
 
                 {/* Small decorative star */}
-                  <div
-                  className={`absolute bottom-16 right-140 z-20 transition-all duration-1200 ease-out ${
+                <div
+                  className={`absolute bottom-16 right-32 z-20 transition-all duration-1200 ease-out ${
                     isVisible && imageLoaded
                       ? "translate-y-0 opacity-100 rotate-0"
                       : "translate-y-8 opacity-0 -rotate-12"
@@ -209,15 +229,15 @@ useEffect(() => {
                   style={{
                     transitionDelay: isVisible && imageLoaded ? "1200ms" : "0ms",
                   }}
-                 >
+                >
                   <Image
                     src={data.decorativeElements?.stars?.small?.src || "/placeholder.svg"}
                     alt={data.decorativeElements?.stars?.small?.alt || "Small decorative star"}
                     width={40}
                     height={40}
                     className="w-8 h-8 lg:w-10 lg:h-10 animate-pulse"
-                   />
-                   </div>
+                  />
+                </div>
 
                 {/* Restaurant image in circle with animation */}
                 <div className="relative">
@@ -241,7 +261,7 @@ useEffect(() => {
                       transitionDelay: isVisible ? "1000ms" : "0ms",
                     }}
                   >
-                    <div className="w-60 h-12 lg:w-96 lg:h-126 rounded-2xl overflow-hidden border-4 border-gray shadow-2xl transform hover:scale-105 transition-transform duration-500 ease-out -mt-12 lg:mr-0 ">
+                    <div className="w-60 h-60 lg:w-96 lg:h-96 rounded-2xl overflow-hidden border-4 border-white shadow-2xl transform hover:scale-105 transition-transform duration-500 ease-out">
                       <Image
                         src={data.heroImage?.src || "/placeholder.svg"}
                         alt={data.heroImage?.alt || "Hero image"}
@@ -293,7 +313,7 @@ useEffect(() => {
 
       <div
         className={`absolute bottom-1/3 left-1/4 w-6 h-6 border-2 border-orange-300 rounded-full transition-all duration-1500 ease-out ${
-          isVisible ? "opacity-80 scale-800 -rotate-45" : "opacity-0 scale-50 rotate-0"
+          isVisible ? "opacity-30 scale-100 -rotate-45" : "opacity-0 scale-50 rotate-0"
         }`}
         style={{
           transitionDelay: isVisible ? "2000ms" : "0ms",

@@ -1,10 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ProductCard } from "./product-card"
 
-type ProductCategory = "VEGETABLES" | "FRUITS" | "GRAINS" | "TUBERS" | "LEGUMES" | "HERBS_SPICES"
+type ProductCategory =
+  | "VEGETABLES"
+  | "FRUITS"
+  | "GRAINS"
+  | "TUBERS"
+  | "LEGUMES"
+  | "HERBS_SPICES"
 
 interface Product {
   id: string
@@ -27,45 +32,44 @@ type Props = {
 }
 
 export default function ProductGrid({ products }: Props) {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all")
+  const [currentPage, setCurrentPage] = useState(1)
+  const productsPerPage = 4 // 2 rows (assuming 2 columns per row on small screens, adjust as needed)
 
-  const filteredProducts =
-    selectedCategory === "all" ? products : products.filter((product) => product.category === selectedCategory)
+  const totalPages = Math.ceil(products.length / productsPerPage)
+  const startIdx = (currentPage - 1) * productsPerPage
+  const endIdx = startIdx + productsPerPage
+  const currentProducts = products.slice(startIdx, endIdx)
 
-  const categories = [
-    { value: "all", label: "All Categories" },
-    { value: "VEGETABLES", label: "Vegetables" },
-    { value: "FRUITS", label: "Fruits" },
-    { value: "GRAINS", label: "Grains" },
-    { value: "TUBERS", label: "Tubers" },
-    { value: "LEGUMES", label: "Legumes" },
-    { value: "HERBS_SPICES", label: "Herbs & Spices" },
-  ]
+  const handlePrev = () => setCurrentPage((p) => Math.max(1, p - 1))
+  const handleNext = () => setCurrentPage((p) => Math.min(totalPages, p + 1))
 
   return (
     <div>
-     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <div className="flex items-center gap-4">
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="Filter by category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category.value} value={category.value}>
-                  {category.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-
-        {filteredProducts.map((product) => (
+        {currentProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center gap-4 mt-6">
+        <button
+          onClick={handlePrev}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span className="px-2 py-2">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNext}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
     </div>
   )
