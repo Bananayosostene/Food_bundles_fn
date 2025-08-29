@@ -33,7 +33,7 @@ export default function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-gray-100/50">
+    <header className="sticky top-0 z-50 w-full bg-white backdrop-blur-md border-b border-green-100 shadow-sm">
       <div className="flex items-center justify-between w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 lg:py-6">
         {/* Logo */}
         <Link href=" " className="flex items-center gap-2 flex-shrink-0">
@@ -57,27 +57,16 @@ export default function Header() {
                 Home
               </NavigationMenuLink>
             </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                href="/products"
-                className={cn(
-                  "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-                  "text-gray-700 hover:text-green-600",
-                )}
-              >
-                Products
-              </NavigationMenuLink>
-            </NavigationMenuItem>
           
             <NavigationMenuItem>
               <NavigationMenuLink
-                href="/how-it-works"
+                href="/login"
                 className={cn(
                   "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50",
                   "text-gray-700 hover:text-green-600",
                 )}
               >
-                How It Works
+                Restaurants
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
@@ -88,7 +77,7 @@ export default function Header() {
                   "text-gray-700 hover:text-green-600",
                 )}
               >
-                Get Offer
+                Our Offer
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>

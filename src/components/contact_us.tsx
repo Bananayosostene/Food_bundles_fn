@@ -58,14 +58,14 @@ export function ContactUs() {
     }
     
     if (message.includes('contact') || message.includes('phone') || message.includes('email')) {
-      return 'You can reach us at info@foodbundle.com or call (555) 123-4567. Our office is located at 123 Market Street, Farmville, CA 94123. We typically respond within 24 hours!'
+      return 'You can reach us at info@foodbundle.com or call (119) , +25078456389. Our office is located at 123 Market Street, Farmville, CA 94123. We typically respond within 24 hours!'
     }
     
     if (message.includes('thanks') || message.includes('thank you')) {
       return 'You\'re welcome! I\'m happy to help. Is there anything else you\'d like to know about our products or services?'
     }
     
-    return 'That\'s a great question! For detailed information about that topic, I\'d recommend contacting our team directly at info@foodbundle.com or (555) 123-4567. They\'ll be able to provide you with comprehensive assistance. Is there anything else I can help with right now?'
+    return 'That\'s a great question! For detailed information about that topic, I\'d recommend contacting our team directly at info@foodbundle.com or (119) +25078456389. They\'ll be able to provide you with comprehensive assistance. Is there anything else I can help with right now?'
   }
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -99,20 +99,17 @@ export function ContactUs() {
   }
 
   return (
-    <section id="contact-us" className="h-screen relative z-10 px-8 py-8 bg-white">
+    <section id="contact-us" className="min-h-screen relative z-10 px-8 py-8 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto h-full flex flex-col">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 flex-1 min-h-0">
           {/* Left Column - AI Chat */}
           <div className="flex flex-col h-full min-h-0">
             <div className="mb-6 flex-shrink-0">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Chat with AI Assistant</h2>
-              <p className="text-base text-gray-600 leading-relaxed">
-                Get instant answers to your questions about our products, services, and more. Our AI assistant is here to help 24/7!
-              </p>
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Chat with us for Assistant</h2>
             </div>
 
             {/* Chat Container */}
-            <div className="flex-1 shadow-xl border-0 bg-green-100 rounded-lg border border-gray-200 flex flex-col min-h-0 max-h-full">
+            <div className="flex-1 shadow-xl border-0 bg-green-100 rounded-lg border border-gray-200 flex flex-col min-h-0 max-h-130">
               {/* Chat Header */}
               <div className="text-center pb-2 p-6 border-b border-gray-100 flex-shrink-0">
                 <div className="flex items-center justify-center gap-2 mb-2">
@@ -125,7 +122,7 @@ export function ContactUs() {
               </div>
 
               {/* Messages Area - Scrollable */}
-              <div className="flex-1 p-6 overflow-y-auto space-y-4 min-h-0">
+              <div className="flex-1 p-6 overflow-y-auto space-y-4 min-h-0 max-h-full">
                 {messages.map((message) => (
                   <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                     <div className={`flex items-start gap-3 max-w-[80%] ${message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
@@ -158,7 +155,7 @@ export function ContactUs() {
                 
                 {/* Typing Indicator */}
                 {isTyping && (
-                  <div className="flex justify-start">
+                  <div className="flex justify-start ">
                     <div className="flex items-start gap-3 max-w-[80%]">
                       <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                         <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
