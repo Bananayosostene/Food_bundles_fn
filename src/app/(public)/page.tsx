@@ -1,372 +1,183 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
+import Home from "@/components/home"
+import ProductGrid  from "@/components/products"
 
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
-import { HeroWithRestaurants } from "@/components/hero-section";
-import { ProductsSection } from "@/components/products-section";
-import { QuickTalkWrapper } from "@/components/quck-talk-section";
-import { useState } from "react";
-
-// Mock data fetching functions (replace with actual API calls)
+// Mock data fetching function
 async function getHomeData() {
-  // Simulate API call
   return {
-    title: "Fresh From Farm\nto Table",
-    subtitle: "Farm to Table Excellence",
+    title: "FOOD BUNDLES",
     description:
-      "Connecting local farmers with restaurants for sustainable food systems. Build direct relationships and create a more efficient supply chain.",
-    primaryButton: {
-      text: "Submit Your Product →",
-      href: "/login",
-    },
+      "Connect Your Restaurant to Our Farm.",
     secondaryButton: {
       text: "Shop Now →",
-      href: "/login"
+      href: "/login",
     },
     heroImage: {
-      src: "/imgs/FRAME.png",
-      alt: "Fresh produce arranged in a circle with wooden cutting board center",
+      src: "/images/serving.jpg",
+      alt: "Restaurant dining scene with waiter serving customers",
     },
     decorativeElements: {
       stars: {
         large: {
-          src: "/imgs/Vector 1.png",
-          alt: "Decorative star",
+          src: "/images/Vector 1.png",
+          alt: "Decorative Vector 1 star",
         },
         small: {
-          src: "/imgs/Vector 1.png",
-          alt: "Decorative star",
+          src: "/images/Vector 1.png",
+          alt: "Small decorative star",
         },
       },
     },
   };
 }
 
-  const restaurants = [
+// Mock products data
+async function getProductsData() {
+  return [
     {
-      name: "Bella Vista",
-      image: "/restaurants/italian-restaurant-chef.png",
-      featuredPost:
-        "Just received fresh organic tomatoes for tonight's special pasta!",
-      seen: true,
+      id: "1",
+      productName: "Fresh Organic Tomatoes",
+      unitPrice: 4.99,
+      unit: "kg",
+      bonus: 10,
+      createdBy: "Green Farm Co.",
+      expiryDate: new Date("2024-12-31"),
+      images:["/images/farmer-market.jpg"],
+      quantity: 50,
+      sku: "TOM001",
+      category: "VEGETABLES" as const,
+      rating: 4.8,
+      soldCount: 127,
     },
     {
-      name: "Green Garden",
-      image: "/restaurants/vegetarian-restaurant-chef.png",
-      featuredPost:
-        "Our new vegan menu is launching next week with locally sourced ingredients.",
-      seen: false,
+      id: "2",
+      productName: "Premium Carrots Bundle",
+      unitPrice: 3.49,
+      unit: "kg",
+      bonus: 5,
+      createdBy: "Sunrise Farms",
+      expiryDate: new Date("2024-12-25"),
+      images: ["/images/farmer-market.jpg"],
+      quantity: 75,
+      sku: "CAR001",
+      category: "VEGETABLES" as const,
+      rating: 4.6,
+      soldCount: 89,
     },
     {
-      name: "Ocean Breeze",
-      image: "/restaurants/seafood-restaurant-chef.png",
-      featuredPost:
-        "Fresh catch of the day: Atlantic salmon and sea bass available now!",
-      seen: true,
-    },
-    {
-      name: "Spice Route",
-      image: "/restaurants/indian-restaurant-chef.png",
-      featuredPost:
-        "Authentic spices and herbs sourced directly from India for our curry dishes.",
-      seen: false,
-    },
-    {
-      name: "Farm Table",
-      image: "/restaurants/farm-to-table-restaurant-chef.png",
-      featuredPost:
-        "Farm-to-table dining with ingredients harvested this morning!",
-      seen: true,
-    },
-    {
-      name: "Coastal Catch",
-      image: "/restaurants/seafood-restaurant-chef.png",
-      featuredPost: "Daily fresh seafood selection from local fishermen.",
-      seen: true,
-    },
-    {
-      name: "Mediterranean Delight",
-      image: "/restaurants/italian-restaurant-chef.png",
-      featuredPost:
-        "Authentic Mediterranean cuisine with olive oil from Greece.",
-      seen: false,
-    },
-    {
-      name: "Tokyo Fusion",
-      image: "/restaurants/indian-restaurant-chef.png",
-      featuredPost: "Modern Japanese dishes with a contemporary twist.",
-      seen: true,
-    },
-    {
-      name: "Rustic Barn",
-      image: "/restaurants/farm-to-table-restaurant-chef.png",
-      featuredPost: "Country-style cooking with locally grown ingredients.",
-      seen: false,
-    },
-    {
-      name: "Seaside Grill",
-      image: "/restaurants/seafood-restaurant-chef.png",
-      featuredPost: "Grilled specialties with ocean-fresh seafood daily.",
-      seen: true,
-    },
-    {
-      name: "Garden Bistro",
-      image: "/restaurants/vegetarian-restaurant-chef.png",
-      featuredPost: "Plant-based cuisine featuring seasonal vegetables.",
-      seen: true,
-    },
-    {
-      name: "Pasta Corner",
-      image: "/restaurants/italian-restaurant-chef.png",
-      featuredPost: "Handmade pasta with imported Italian ingredients.",
-      seen: false,
-    },
-    {
-      name: "Curry House",
-      image: "/restaurants/indian-restaurant-chef.png",
-      featuredPost: "Traditional Indian flavors with organic spices.",
-      seen: true,
-    },
-    {
-      name: "Harbor View",
-      image: "/restaurants/seafood-restaurant-chef.png",
-      featuredPost: "Waterfront dining with the freshest catch of the day.",
-      seen: false,
-    },
-    {
-      name: "Harvest Kitchen",
-      image: "/restaurants/farm-to-table-restaurant-chef.png",
-      featuredPost: "Seasonal menu changes based on local farm harvest.",
-      seen: true,
-    },
-    {
-      name: "Verde Vita",
-      image: "/restaurants/vegetarian-restaurant-chef.png",
-      featuredPost: "Italian-inspired vegetarian dishes with fresh herbs.",
-      seen: true,
-    },
-    {
-      name: "Tuscan Table",
-      image: "/restaurants/italian-restaurant-chef.png",
-      featuredPost:
-        "Traditional Tuscan recipes passed down through generations.",
-      seen: false,
-    },
-    {
-      name: "Bombay Express",
-      image: "/restaurants/indian-restaurant-chef.png",
-      featuredPost:
-        "Fast-casual Indian cuisine with authentic street food flavors.",
-      seen: true,
-    },
-    {
-      name: "Neptune's Kitchen",
-      image: "/restaurants/seafood-restaurant-chef.png",
-      featuredPost:
-        "Premium seafood restaurant with sustainable fishing practices.",
-      seen: false,
-    },
-    {
-      name: "Country Roots",
-      image: "/restaurants/farm-to-table-restaurant-chef.png",
-      featuredPost:
-        "Family-owned restaurant supporting local farmers for 25 years.",
-      seen: true,
-    },
-  ];
-
-  const categories = [
-    {
-      name: "ALL PRODUCTS",
-      image: "/products/fresh-organic-roma-tomatoes.png",
-      productCount: 450,
-    },
-    {
-      name: "VEGETABLES",
-      image: "/products/fresh-organic-roma-tomatoes.png",
-      productCount: 15,
-    },
-    {
-      name: "FRUITS",
-      image: "/products/fresh-organic-roma-tomatoes.png",
-      productCount: 10,
-    },
-    {
-      name: "ANIMAL PRODUCTS",
-      image: "/products/fresh-organic-roma-tomatoes.png",
-      productCount: 8,
-    },
-  ];
-
-  const products = [
-    {
-      name: "Organic Roma Tomatoes",
-      price: 4.99,
-      originalPrice: 6.99,
-      image: "/products/fresh-organic-roma-tomatoes.png",
-      category: "Vegetables",
-      inStock: true,
+      id: "3",
+      productName: "Fresh Lettuce Heads",
+      unitPrice: 2.99,
+      unit: "piece",
+      bonus: 0,
+      createdBy: "Valley Gardens",
+      expiryDate: new Date("2024-12-20"),
+      images: ["/images/products.jpg"],
+      quantity: 30,
+      sku: "LET001",
+      category: "VEGETABLES" as const,
       rating: 4.5,
-      isNew: true,
-      isFeatured: true,
+      soldCount: 45,
     },
     {
-      name: "Fresh Atlantic Salmon",
-      price: 24.99,
-      image: "/products/fresh-atlantic-salmon-fillet.png",
-      category: "Seafood",
-      inStock: true,
-      rating: 4.8,
-      isNew: false,
-      isFeatured: true,
-    },
-    {
-      name: "Free-Range Chicken Breast",
-      price: 12.99,
-      originalPrice: 15.99,
-      image: "/products/free-range-chicken-breast.png",
-      category: "Meat",
-      inStock: true,
-      rating: 4.6,
-      isNew: true,
-      isFeatured: false,
-    },
-    {
-      name: "Organic Mixed Greens",
-      price: 3.49,
-      image: "/products/organic-mixed-salad-greens.png",
-      category: "Vegetables",
-      inStock: false,
-      rating: 4.2,
-      isNew: false,
-      isFeatured: true,
-    },
-    {
-      name: "Artisan Cheese Selection",
-      price: 18.99,
-      image: "/products/artisan-cheese-selection-platter.png",
-      category: "Dairy",
-      inStock: true,
-      rating: 4.9,
-      isNew: true,
-      isFeatured: true,
-    },
-    {
-      name: "Fresh Herbs Bundle",
-      price: 7.99,
-      image: "/products/fresh-herbs-basil-parsley-cilantro.png",
-      category: "Herbs",
-      inStock: true,
-      rating: 4.3,
-      isNew: false,
-      isFeatured: false,
-    },
-    {
-      name: "Premium Basil Leaves",
-      price: 5.99,
-      image: "/products/fresh-herbs-basil-parsley-cilantro.png",
-      category: "Herbs",
-      inStock: true,
+      id: "4",
+      productName: "Organic Potatoes",
+      unitPrice: 2.49,
+      unit: "kg",
+      bonus: 15,
+      createdBy: "Mountain Harvest",
+      expiryDate: new Date("2025-01-15"),
+      images: ["/images/Tomatoes.svg"],
+      quantity: 100,
+      sku: "POT001",
+      category: "TUBERS" as const,
       rating: 4.7,
-      isNew: true,
-      isFeatured: false,
+      soldCount: 203,
     },
     {
-      name: "Organic Cilantro",
-      price: 4.99,
-      image: "/products/fresh-herbs-basil-parsley-cilantro.png",
-      category: "Herbs",
-      inStock: true,
-      rating: 4.4,
-      isNew: false,
-      isFeatured: true,
-    },
-    {
-      name: "Fresh Parsley Bundle",
-      price: 6.99,
-      image: "/products/fresh-herbs-basil-parsley-cilantro.png",
-      category: "Herbs",
-      inStock: true,
-      rating: 4.1,
-      isNew: true,
-      isFeatured: false,
-    },
-    {
-      name: "Wild Caught Tuna",
-      price: 28.99,
-      originalPrice: 32.99,
-      image: "/products/fresh-atlantic-salmon-fillet.png",
-      category: "Seafood",
-      inStock: true,
-      rating: 4.8,
-      isNew: true,
-      isFeatured: true,
-    },
-    {
-      name: "Grass-Fed Beef Steaks",
-      price: 35.99,
-      image: "/products/free-range-chicken-breast.png",
-      category: "Meat",
-      inStock: true,
-      rating: 4.9,
-      isNew: false,
-      isFeatured: true,
-    },
-    {
-      name: "Organic Baby Spinach",
-      price: 4.49,
-      image: "/products/organic-mixed-salad-greens.png",
-      category: "Vegetables",
-      inStock: true,
-      rating: 4.3,
-      isNew: true,
-      isFeatured: false,
-    },
-    {
-      name: "Aged Cheddar Cheese",
-      price: 12.99,
-      originalPrice: 15.99,
-      image: "/products/artisan-cheese-selection-platter.png",
-      category: "Dairy",
-      inStock: true,
+      id: "5",
+      productName: "Premium Carrots Bundle",
+      unitPrice: 3.49,
+      unit: "kg",
+      bonus: 5,
+      createdBy: "Sunrise Farms",
+      expiryDate: new Date("2024-12-25"),
+      images: ["/images/farmer-market.jpg"],
+      quantity: 75,
+      sku: "CAR001",
+      category: "VEGETABLES" as const,
       rating: 4.6,
-      isNew: false,
-      isFeatured: true,
+      soldCount: 89,
     },
     {
-      name: "Fresh Thyme Sprigs",
-      price: 8.99,
-      image: "/products/fresh-herbs-basil-parsley-cilantro.png",
-      category: "Herbs",
-      inStock: true,
-      rating: 4.2,
-      isNew: true,
-      isFeatured: false,
+      id: "6",
+      productName: "Premium Carrots Bundle",
+      unitPrice: 3.49,
+      unit: "kg",
+      bonus: 5,
+      createdBy: "Sunrise Farms",
+      expiryDate: new Date("2024-12-25"),
+      images: ["/images/farmer-market.jpg"],
+      quantity: 75,
+      sku: "CAR001",
+      category: "VEGETABLES" as const,
+      rating: 4.6,
+      soldCount: 89,
     },
     {
-      name: "Organic Cherry Tomatoes",
-      price: 6.99,
-      image: "/products/fresh-organic-roma-tomatoes.png",
-      category: "Vegetables",
-      inStock: true,
-      rating: 4.7,
-      isNew: false,
-      isFeatured: true,
+      id: "7",
+      productName: "Premium Carrots Bundle",
+      unitPrice: 3.49,
+      unit: "kg",
+      bonus: 5,
+      createdBy: "Sunrise Farms",
+      expiryDate: new Date("2024-12-25"),
+      images: ["/images/product2.jpg"],
+      quantity: 75,
+      sku: "CAR001",
+      category: "VEGETABLES" as const,
+      rating: 4.6,
+      soldCount: 89,
     },
-  ];
+    {
+      id: "8",
+      productName: "Premium Carrots Bundle",
+      unitPrice: 3.49,
+      unit: "kg",
+      bonus: 5,
+      createdBy: "Sunrise Farms",
+      expiryDate: new Date("2024-12-25"),
+      images: ["/images/egges.svg"],
+      quantity: 75,
+      sku: "CAR001",
+      category: "VEGETABLES" as const,
+      rating: 4.6,
+      soldCount: 89,
+    },
+  ]
+}
+
+export default async function LandingPage() {
+  const homeData = await getHomeData()
+  const products = await getProductsData()
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <HeroWithRestaurants restaurants={restaurants} />
-      <ProductsSection
-        products={products}
-        categories={categories}
-        isGuest={isGuest}
-      />
-      <QuickTalkWrapper />
-      <Footer />
+    <div className="min-h-screen bg-gradient-to-br from-green-50/30 to-orange-50/30 relative  overflow-hidden">
+      {/* Background decorative circles */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-green-100/20 rounded-full -translate-y-32 translate-x-16"></div>
+      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-orange-100/30 rounded-full translate-y-32 translate-x-16"></div>
+
+      <Home data={homeData}/>
+
+      <section className="py-16 px-4 max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Products We Offer</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Discover our selection of premium fresh produce, delivered directly from trusted local farms to your
+            restaurant.
+          </p>
+        </div>
+        <ProductGrid products={products} />
+      </section>
     </div>
-  );
+  )
 }
