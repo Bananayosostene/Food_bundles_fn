@@ -154,7 +154,7 @@ export default function ProductManagement() {
         </div>
 
         {/* Search and Date Filter */}
-        <div className="p-4 border-b border-gray-200 space-y-4">
+        <div className="p-4 border-b border-gray-200 space-y-4 w-120">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <Input
@@ -181,15 +181,12 @@ export default function ProductManagement() {
             </div>
           )}
         </div>
-
-        {/* Products Table */}
         <div className="overflow-x-auto">
          <div className="p-4">
           <DataTable
             columns={productColumns(handleViewDetails, handleDeleteProduct)}
             data={filteredProducts}
             searchKey="name"
-            searchPlaceholder="Search products..."
             showSearch
             showColumnVisibility
             showPagination

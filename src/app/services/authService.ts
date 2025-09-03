@@ -14,7 +14,7 @@ export const authService = {
 
   registerFarmer: async (farmerData: ICreateFarmerData) => {
     const axiosClient = createAxiosClient();
-    const response = await axiosClient.post("/farmers", farmerData);
+    const response = await axiosClient.post("/Farmers", farmerData);
     return response.data;
   },
 

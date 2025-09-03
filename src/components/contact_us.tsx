@@ -1,135 +1,201 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { MapPin, Mail, Phone, Clock, Send, User, MessageSquare } from "lucide-react"
+import { MapPin, Mail, Phone, Clock, Send, Bot, User } from "lucide-react"
+
+interface Message {
+  id: string
+  text: string
+  sender: 'user' | 'bot'
+  timestamp: Date
+}
 
 export function ContactUs() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setIsLoading(true)
-    setError("")
-    setSuccess("")
-
-    const formData = new FormData(e.currentTarget)
-    const name = formData.get("name") as string
-    const email = formData.get("email") as string
-    const message = formData.get("message") as string
-
-    try {
-      // Simulate API call - replace with actual contact service
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      console.log("Contact form submitted:", { name, email, message })
-      setSuccess("Thank you for your message! We'll get back to you within 24 hours.")
-
-      // Reset form
-      e.currentTarget.reset()
-    } catch (error: unknown) {
-      console.error("Contact form error:", error)
-      if (error instanceof Error) {
-        setError(error.message || "Failed to send message. Please try again.")
-      } else {
-        setError("Failed to send message. Please try again.")
-      }
-    } finally {
-      setIsLoading(false)
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      text: 'Hello! Food Bundles staff here to assist you with any questions about our farm-fresh products and services.',
+      sender: 'bot',
+      timestamp: new Date()
     }
+  ])
+  const [inputMessage, setInputMessage] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
+  const getBotResponse = (userMessage: string): string => {
+    const message = userMessage.toLowerCase()
+    
+    if (message.includes('product') || message.includes('vegetable') || message.includes('food')) {
+      return 'We offer fresh organic produce including tomatoes, carrots, lettuce, potatoes, and more! All our products are sourced directly from trusted local farms. Would you like to know about specific products or pricing?'
+    }
+    
+    if (message.includes('price') || message.includes('cost') || message.includes('expensive')) {
+      return 'Our prices are competitive and vary by product. For example, organic tomatoes are $4.99/kg and premium carrots are $3.49/kg. Bulk orders get special discounts. Would you like a detailed price list?'
+    }
+    
+    if (message.includes('delivery') || message.includes('shipping')) {
+      return 'We offer fast delivery directly from farms to restaurants. Delivery times vary by location, but typically take 1-2 business days. We also provide tracking information for all orders.'
+    }
+    
+    if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+      return 'Hello! Welcome to Food Bundles! I\'m here to help you learn about our farm-to-restaurant service. What would you like to know?'
+    }
+    
+    if (message.includes('hours') || message.includes('time') || message.includes('open')) {
+      return 'Our customer service hours are Monday - Friday, 9am - 5pm PST. However, I\'m available 24/7 to answer your questions! For urgent matters, you can call us at (555) 123-4567.'
+    }
+    
+    if (message.includes('contact') || message.includes('phone') || message.includes('email')) {
+      return 'You can reach us at info@foodbundle.com or call (555) 123-4567. Our office is located at 123 Market Street, Farmville, CA 94123. We typically respond within 24 hours!'
+    }
+    
+    if (message.includes('thanks') || message.includes('thank you')) {
+      return 'You\'re welcome! I\'m happy to help. Is there anything else you\'d like to know about our products or services?'
+    }
+    
+    return 'That\'s a great question! For detailed information about that topic, I\'d recommend contacting our team directly at info@foodbundle.com or (555) 123-4567. They\'ll be able to provide you with comprehensive assistance. Is there anything else I can help with right now?'
+  }
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!inputMessage.trim()) return
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      text: inputMessage.trim(),
+      sender: 'user',
+      timestamp: new Date()
+    }
+
+    setMessages(prev => [...prev, userMessage])
+    setInputMessage('')
+    setIsTyping(true)
+
+    // Simulate bot typing delay
+    setTimeout(() => {
+      const botResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: getBotResponse(inputMessage.trim()),
+        sender: 'bot',
+        timestamp: new Date()
+      }
+      
+      setMessages(prev => [...prev, botResponse])
+      setIsTyping(false)
+    }, 1000)
   }
 
   return (
-    <section id="contact-us" className="relative z-10 px-8 py-16 bg-white">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
-          {/* Left Column - Contact Form */}
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Contact Us</h2>
+    <section id="contact-us" className="h-screen relative z-10 px-8 py-8 bg-white">
+      <div className="max-w-7xl mx-auto h-full flex flex-col">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 flex-1 min-h-0">
+          {/* Left Column - AI Chat */}
+          <div className="flex flex-col h-full min-h-0">
+            <div className="mb-6 flex-shrink-0">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Chat with AI Assistant</h2>
               <p className="text-base text-gray-600 leading-relaxed">
-                Have questions or feedback? We are here to help! Fill out the form below and our team will get back to
-                you soon.
+                Get instant answers to your questions about our products, services, and more. Our AI assistant is here to help 24/7!
               </p>
             </div>
 
-            <div className="w-full shadow-xl border-0 bg-white rounded-lg border border-gray-200">
-              <div className="text-center pb-2 p-6 border-b border-gray-100">
-                <h3 className="text-xl font-bold text-gray-900">Get in Touch</h3>
-                <p className="text-gray-600 text-sm">Send us a message and we will respond promptly</p>
+            {/* Chat Container */}
+            <div className="flex-1 shadow-xl border-0 bg-green-100 rounded-lg border border-gray-200 flex flex-col min-h-0 max-h-full">
+              {/* Chat Header */}
+              <div className="text-center pb-2 p-6 border-b border-gray-100 flex-shrink-0">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-bold">FB</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900">Food Bundles Assistant</h3>
+                </div>
+                <p className="text-gray-600 text-sm">Ask me anything about our products and services</p>
               </div>
-              <div className="p-6 space-y-6">
-                {error && (
-                  <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
-                    {error}
+
+              {/* Messages Area - Scrollable */}
+              <div className="flex-1 p-6 overflow-y-auto space-y-4 min-h-0">
+                {messages.map((message) => (
+                  <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`flex items-start gap-3 max-w-[80%] ${message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        message.sender === 'user' ? 'bg-blue-100' : 'bg-green-100'
+                      }`}>
+                        {message.sender === 'user' ? (
+                          <User className="w-4 h-4 text-blue-600" />
+                        ) : (
+                          <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs font-bold">FB</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className={`rounded-2xl px-4 py-3 ${
+                        message.sender === 'user' 
+                          ? 'bg-blue-500 text-white' 
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        <p className="text-sm leading-relaxed">{message.text}</p>
+                        <p className={`text-xs mt-1 ${
+                          message.sender === 'user' ? 'text-blue-100' : 'text-gray-500'
+                        }`}>
+                          {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                {/* Typing Indicator */}
+                {isTyping && (
+                  <div className="flex justify-start">
+                    <div className="flex items-start gap-3 max-w-[80%]">
+                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
+                          <span className="text-white text-xs font-bold">FB</span>
+                        </div>
+                      </div>
+                      <div className="bg-gray-100 rounded-2xl px-4 py-3">
+                        <div className="flex gap-1">
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
-                {success && (
-                  <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-md text-sm">
-                    {success}
-                  </div>
-                )}
+                <div ref={messagesEndRef} />
+              </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {/* Name Field */}
-                  <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Your Name"
-                      className="w-full pl-10 h-12 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                      required
-                      disabled={isLoading}
-                    />
-                  </div>
-
-                  {/* Email Field */}
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email Address"
-                      className="w-full pl-10 h-12 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                      required
-                      disabled={isLoading}
-                    />
-                  </div>
-
-                  {/* Message Field */}
-                  <div className="relative">
-                    <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <textarea
-                      name="message"
-                      placeholder="How can we help you?"
-                      rows={5}
-                      className="w-full pl-10 pt-3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none"
-                      required
-                      disabled={isLoading}
-                    />
-                  </div>
-
-                  {/* Submit Button */}
+              {/* Input Area */}
+              <div className="p-6 border-t border-gray-100 flex-shrink-0">
+                <form onSubmit={handleSendMessage} className="flex gap-3">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={inputMessage}
+                    onChange={(e) => setInputMessage(e.target.value)}
+                    placeholder="Type your message here..."
+                    className="flex-1 h-12 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    disabled={isTyping}
+                  />
                   <Button 
                     type="submit" 
-                    className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors duration-200" 
-                    disabled={isLoading}
+                    className="h-12 w-12 bg-green-600 hover:bg-green-700 text-white rounded-full font-medium transition-colors duration-200 flex items-center justify-center flex-shrink-0" 
+                    disabled={isTyping || !inputMessage.trim()}
                   >
-                    {isLoading ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        Send Message
-                        <Send className="w-4 h-4 ml-2" />
-                      </>
-                    )}
+                    <Send className="w-4 h-4" />
                   </Button>
                 </form>
               </div>
@@ -137,10 +203,10 @@ export function ContactUs() {
           </div>
 
           {/* Right Column - Contact Information */}
-          <div className="bg-green-50/50 rounded-2xl p-8 lg:p-10 border border-green-100/50">
+          <div className="bg-green-50/50 rounded-2xl p-8 lg:p-10 border border-green-100/50 h-full flex flex-col">
             <h3 className="text-2xl font-bold text-gray-900 mb-8">Contact Information</h3>
 
-            <div className="space-y-6">
+            <div className="space-y-6 flex-shrink-0">
               {/* Address */}
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -194,7 +260,7 @@ export function ContactUs() {
             </div>
 
             {/* Additional Info */}
-            <div className="mt-8 pt-6 border-t border-green-200/50">
+            <div className="mt-8 pt-6 border-t border-green-300/50 flex-shrink-0">
               <div className="bg-white/50 rounded-lg p-4">
                 <h5 className="font-semibold text-gray-900 mb-2">Quick Response</h5>
                 <p className="text-sm text-gray-600 leading-relaxed">
