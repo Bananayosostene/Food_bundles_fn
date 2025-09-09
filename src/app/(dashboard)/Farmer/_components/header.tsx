@@ -17,12 +17,12 @@ export default function DashboardHeader() {
 
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" className="relative" >
-            <Bell className="w-5 h-5" />
+            <Bell className="w-4 h-4 " />
             <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs"></span>
-          </Button>
+           </Button>
 
-          <Avatar className="w-8 h-8">
-            <AvatarImage src="/placeholder.svg?height=32&width=32" />
+           <Avatar className="w-12 h-12">
+            <AvatarImage src="/images/Michael.svg?height=32&width=32" />
             <AvatarFallback>BS</AvatarFallback>
           </Avatar>
         </div>

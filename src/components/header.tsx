@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-"use client";
-
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { Menu, X } from "lucide-react";
-import { useState } from "react";
-import Link from "next/link";
-
-export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-=======
 "use client"
 
 import { Leaf, Menu } from "lucide-react"
@@ -35,7 +22,6 @@ export default function Header() {
     }
   }
 
->>>>>>> 2d70e2d (Implemented farmer page)
   return (
     <header className="sticky top-0 z-50">
       <div className="flex">
@@ -53,11 +39,6 @@ export default function Header() {
           <span className="text-xl font-bold text-black">FoodBundles</span>
         </div>
 
-<<<<<<< HEAD
-        <div className="flex-1 bg-green-700 text-primary-foreground">
-          <div className="container mx-auto px-4 py-4 flex items-center">
-            <div className="flex-1" />
-=======
       {/* Desktop Navigation Menu */}
       <NavigationMenu className="hidden md:flex">
         <NavigationMenuList>
@@ -153,7 +134,6 @@ export default function Header() {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
->>>>>>> 2d70e2d (Implemented farmer page)
 
             <nav className="hidden md:flex items-center gap-6">
               <a
@@ -185,10 +165,8 @@ export default function Header() {
                 </Button>
                 </Link>
               </div>
-<<<<<<< HEAD
 
               {/* Mobile Menu Button */}
-=======
               FoodBundle
             </SheetTitle>
             <SheetDescription>Connecting farms to tables with fresh, local produce</SheetDescription>
@@ -227,7 +205,6 @@ export default function Header() {
               Contact
             </button>
             <div className="flex flex-col gap-3 pt-6 border-t">
->>>>>>> 2d70e2d (Implemented farmer page)
               <Button
                 variant="ghost"
                 size="sm"
