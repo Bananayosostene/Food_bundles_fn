@@ -41,8 +41,8 @@ export function LoginForm({ loginData }: Props) {
   function getRedirectPath(userRole: UserRole): string {
     switch (userRole) {
       case UserRole.FARMER:
-        return "/farmer";
-      case UserRole.RESTAURANT:
+        return "/Farmer";
+      case UserRole.RESTAURANT: 
         return "/restaurant";
       case UserRole.ADMIN:
       case UserRole.LOGISTIC:
@@ -99,7 +99,7 @@ export function LoginForm({ loginData }: Props) {
       const response = await authService.login(loginPayload);
 
       console.log(
-        "================================================= Login response :",
+        "=================================================  Login response :",
         response
       );
 

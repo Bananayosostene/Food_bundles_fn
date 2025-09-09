@@ -1,4 +1,4 @@
-"use client"
+
 
 import DashboardHeader from "./_components/header"
 import StatsCards from "./_components/stats-cards"

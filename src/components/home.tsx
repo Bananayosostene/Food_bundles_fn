@@ -6,17 +6,17 @@ import { useEffect, useRef, useState } from "react"
 
 const slides = [
   {
-    image: "/images/farmer-market.jpg",
+    image: "/imgs/farmer-market.jpg",
     title: "FOOD BUNDLES",
     description: "Connect Your Restaurant to Our Farm.",
   },
   {
-    image: "/images/product2.jpg",
+    image: "/imgs/product2.jpg",
     title: "FOOD BUNDLES",
     description: "Get groceries, drinks, and essentials instantly.",
   },
   {
-    image: "/images/egges.svg",
+    image: "/imgs/egges.svg",
     title: "FOOD BUNDLES",
     description: "Top-quality fresh produce every time.",
   },

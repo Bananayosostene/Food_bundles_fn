@@ -1,8 +1,9 @@
-"use client"
+// src/app/(wherever)/DashboardHeader.tsx
+"use client";
 
-import { useState } from "react";
-import { Bell, User, ChevronDown, Settings, LogOut, Utensils } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState, useMemo } from "react";
+import { Bell, User, ChevronDown, Settings, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import {
   DropdownMenu,
@@ -10,151 +11,151 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 import NotificationsDrawer from "./notification";
 import ProfileDrawer from "./ProfileDrawer";
+import { authService } from "@/app/services/authService";
+import { toast } from "sonner";
+import { useAuthUser } from "@/app/hooks/useAuthUser";
+import SettingsDrawer from "./farmerSettings";
 
-const testNotifications = [
-  {
-    id: "1",
-    title: "Order Initiated",
-    message: "Your order with id #123-4568 has been initiated successfully",
-    orderId: "#123-4568",
-    timestamp: "12/12/2024 08:30 PM",
-    isRead: false,
-    type: "order_initiated" as const,
-  },
-  {
-    id: "2",
-    title: "Order Completed",
-    message: "Your order with id #123-4568 has been completed successfully",
-    orderId: "#123-4568",
-    timestamp: "12/12/2024 08:30 PM",
-    isRead: true,
-    type: "order_completed" as const,
-  },
-  {
-    id: "3",
-    title: "Payment Received",
-    message: "Payment for order #123-4568 has been received",
-    orderId: "#123-4568",
-    timestamp: "12/12/2024 08:30 PM",
-    isRead: true,
-    type: "payment_received" as const,
-  },
-  {
-    id: "4",
-    title: "Order Cancelled",
-    message: "Your order with id #123-4569 has been cancelled",
-    orderId: "#123-4569",
-    timestamp: "12/12/2024 08:30 PM",
-    isRead: false,
-    type: "order_cancelled" as const,
-  },
-  {
-    id: "5",
-    title: "Order Initiated",
-    message: "Your order with id #123-4570 has been initiated successfully",
-    orderId: "#123-4570",
-    timestamp: "12/12/2024 08:30 PM",
-    isRead: false,
-    type: "order_initiated" as const,
-  },
-];
+const testNotifications: { id: string; title: string; message: string; orderId: string; timestamp: string; isRead: boolean; type: "order_initiated" | "order_completed" | "order_cancelled" | "payment_received"; }[] = [/* ... your sample data ... */];
 
 export default function DashboardHeader() {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const unreadCount = testNotifications.filter((n) => !n.isRead).length;
   const pathname = usePathname();
   const router = useRouter();
-  
-  const handleProfileClick = () => {
-    setIsProfileOpen(true);
+
+  const { user, loading } = useAuthUser();
+
+  // Nice fallbacks if name is missing
+  const displayName = useMemo(
+    () => user?.name || user?.username || user?.phone || "Farmer",
+    [user]
+  );
+  const email = user?.email || "";
+  const avatarLetter = (user?.name || user?.username || user?.phone || "F")
+    .toString()
+    .trim()
+    .charAt(0)
+    .toUpperCase();
+
+  const handleProfileClick = () => setIsProfileOpen(true);
+  const handleSettingClick = () => setIsSettingsOpen(true);
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      // optional: call backend to invalidate token
+      await authService.logout().catch(() => {});
+      // clear storage
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      sessionStorage.clear();
+      toast.success("Logged out successfully");
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Failed to logout. Please try again.");
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
-  
+
   return (
     <>
-    <header className="bg-green-700 border-b border-green-200 sticky top-0 z-50 h-20 shadow-sm">
-      <div className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Left side - Brand */}
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-gradient-to-br rounded-lg flex items-center justify-center shadow-md ">
-             <img
-              src="/imgs/Food_bundle_logo.png"
-              alt="FoodBundle Logo" />
+      <header className="bg-green-700 border-b border-green-200 sticky top-0 z-50 h-20 shadow-sm">
+        <div className="container mx-auto px-6">
+          <div className="flex items-center justify-between h-16">
+            {/* Left: Brand */}
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center shadow-md">
+                <img src="/imgs/Food_bundle_logo.png" alt="FoodBundle Logo" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xl font-bold text-white">Food bundles</span>
+                <p className="text-xs text-white hidden sm:block self-end">
+                  {loading ? "Loading..." : `Welcome back, ${displayName}!`}
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold text-white">
-                Food bundles
-              </span>
-              <p className="text-xs text-white hidden sm:block self-end">Welcome back, Sosten!</p>
-            </div>
-          </div>
 
-          {/* Right side - Notifications and Profile */}
-          <div className="flex items-center gap-3">
-            {/* Notification Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative hover:bg-green-400 transition-colors duration-200"
-              onClick={() => setIsNotificationsOpen(true)}
-            >
-              <Bell className="h-5 w-5 text-white" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-red-500 text-white text-xs border-2 border-white">
+            {/* Right: Notifications + Profile */}
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative hover:bg-green-400 transition-colors duration-200"
+                onClick={() => setIsNotificationsOpen(true)}
+              >
+                <Bell className="h-5 w-5 text-white" />
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-red-500 text-white text-xs border-2 ">
                   {unreadCount}
-              </Badge>
-            </Button>
+                </Badge>
+              </Button>
 
-            {/* Profile Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  className="flex items-center gap-2 hover:bg-green-400 transition-colors duration-200 px-3 py-2 h-auto"
-                >
-                  <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-md">
-                    <span className="text-white text-sm font-medium">E</span>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="flex items-center gap-2 hover:bg-green-400 transition-colors duration-200 px-3 py-2 h-auto"
+                    disabled={isLoggingOut}
+                  >
+                    <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-md">
+                      <span className="text-white text-sm font-medium">{avatarLetter}</span>
+                    </div>
+                    <span className="font-medium text-white hidden sm:block">
+                      {loading ? "..." : displayName}
+                    </span>
+                    <ChevronDown className="h-4 w-4 text-white transition-transform duration-200" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-48 sm:w-56" align="end" forceMount>
+                  <div className="px-3 py-2 border-b border-gray-100">
+                    <p className="text-xs text-gray-500">{email}</p>
                   </div>
-                  <span className="font-medium text-white hidden sm:block">Elia</span>
-                  <ChevronDown className="h-4 w-4 text-white transition-transform duration-200" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-48 sm:w-56 hover:bg-green-100" align="end" forceMount>
-                <div className="px-3 py-2 border-b border-gray-100 ">
-                  <p className="text-xs text-gray-500">elia@food.rw</p>
-                </div>
-                <DropdownMenuItem className="cursor-pointer" onClick={handleProfileClick}>
-                  <User className="mr-3 h-4 w-4" />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer hover:bg-green-300">
-                  <Settings className="mr-3 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 hover:bg-green-300">
-                  <LogOut className="mr-3 h-4 w-4" />
-                  <span>Logout</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <DropdownMenuItem className="cursor-pointer" onClick={handleProfileClick}>
+                    <User className="mr-3 h-4 w-4" />
+                    <span>Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={handleSettingClick}>
+                    <Settings className="mr-3 h-4 w-4" />
+                    <span>Settings</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="cursor-pointer text-red-600 focus:text-red-600"
+                    onClick={handleLogout}
+                    disabled={isLoggingOut}
+                  >
+                    <LogOut className="mr-3 h-4 w-4" />
+                    <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
-     <NotificationsDrawer
-            isOpen={isNotificationsOpen}
-            onClose={() => setIsNotificationsOpen(false)}
-            notifications={testNotifications}
-          />
-     <ProfileDrawer
-            isOpen={isProfileOpen}
-            onClose={() => setIsProfileOpen(false)}
-          />
-     </>
-  )
+      </header>
+
+      <NotificationsDrawer
+        isOpen={isNotificationsOpen}
+        onClose={() => setIsNotificationsOpen(false)}
+        notifications={testNotifications}
+      />
+
+      <ProfileDrawer
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+      />
+      <SettingsDrawer
+      isOpen={isSettingsOpen}
+      onClose={() =>setIsSettingsOpen(false)}
+      />
+    </>
+  );
 }

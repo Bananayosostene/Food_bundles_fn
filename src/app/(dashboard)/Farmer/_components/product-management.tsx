@@ -4,9 +4,10 @@ import { useState } from "react"
 import { Plus, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import ProductSubmissionModal, { ProductSubmissionData } from "./product-submission-modal"
+import ProductSubmissionModal from "./product-submission-modal"
 import { DataTable } from "@/components/data-table"
 import { productColumns } from "./product-columns"
+import { ProductSubmissionData } from "./product-submission-modal"
 
 interface Product {
   id: string
@@ -36,7 +37,7 @@ export default function ProductManagement() {
       statusColor: "bg-green-100 text-green-800",
       image: "/placeholder.svg?height=48&width=48&text=Tomato",
       location: "Kigali, Rwanda",
-      priceValue: 5000
+      priceValue: 5000,
     },
     {
       id: "2",
@@ -49,7 +50,7 @@ export default function ProductManagement() {
       statusColor: "bg-yellow-100 text-yellow-800",
       image: "/placeholder.svg?height=48&width=48&text=Banana",
       location: "Kigali, Rwanda",
-      priceValue: 7500
+      priceValue: 7500,
     },
     {
       id: "3",
@@ -62,8 +63,8 @@ export default function ProductManagement() {
       statusColor: "bg-blue-100 text-blue-800",
       image: "/placeholder.svg?height=48&width=48&text=Rice",
       location: "Kigali, Rwanda",
-      priceValue: 15000
-    }
+      priceValue: 15000,
+    },
   ])
 
   const [selectedStatus, setSelectedStatus] = useState<string>("All")
@@ -77,17 +78,18 @@ export default function ProductManagement() {
   const filteredProducts = products.filter((product) => {
     const matchesStatus = selectedStatus === "All" || product.status === selectedStatus
     const matchesDate = !dateFilter || product.submittedDate === dateFilter
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.category.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchTerm.toLowerCase())
     return matchesStatus && matchesDate && matchesSearch
   })
 
   const addProduct = (product: Product) => {
-    setProducts(prev => [...prev, product])
+    setProducts((prev) => [...prev, product])
   }
 
   const deleteProduct = (productId: string) => {
-    setProducts(prev => prev.filter(p => p.id !== productId))
+    setProducts((prev) => prev.filter((p) => p.id !== productId))
   }
 
   const handleProductSubmit = (data: ProductSubmissionData) => {
@@ -116,92 +118,90 @@ export default function ProductManagement() {
 
   const handleViewDetails = (product: Product) => {
     alert(
-      `Product Details:\nName: ${product.name}\nCategory: ${product.category}\nPrice: ${product.price}\nStatus: ${product.status}`
+      `Product Details:\nName: ${product.name}\nCategory: ${product.category}\nPrice: ${product.price}\nStatus: ${product.status}`,
     )
   }
 
   return (
-    <div className="container mx-auto px-6 pt-8 mt-4">
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-        {/* Header */}
-        <div className="p-4 sm:p-6 border-b border-gray-200 flex items-center justify-between">
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Product Management</h2>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-gray-900">Product Management</h2>
+        <Button onClick={() => setShowSubmissionModal(true)} className="bg-green-600 hover:bg-green-700 text-white">
+          <Plus className="w-4 h-4 mr-2" /> Submit Product
+        </Button>
+      </div>
+
+      {/* Status Filter */}
+      <div className="flex flex-wrap gap-2">
+        {statusOptions.map((status) => (
           <Button
-            onClick={() => setShowSubmissionModal(true)}
-            className="bg-green-600 hover:bg-green-700 text-white"
+            key={status}
+            variant="outline"
+            size="sm"
+            onClick={() => setSelectedStatus(status)}
+            className={
+              selectedStatus === status
+                ? "bg-green-600 text-white border-green-600"
+                : "bg-transparent text-gray-600 border-gray-300 hover:bg-gray-50"
+            }
           >
-            <Plus className="w-4 h-4 mr-2" /> Submit Product
+            {status} ({status === "All" ? products.length : products.filter((p) => p.status === status).length})
           </Button>
-        </div>
+        ))}
+      </div>
 
-        {/* Status Filter */}
-        <div className="flex flex-wrap gap-2 p-4">
-          {statusOptions.map((status) => (
-            <Button
-              key={status}
-              variant="outline"
-              size="sm"
-              onClick={() => setSelectedStatus(status)}
-              className={
-                selectedStatus === status
-                  ? "bg-green-600 text-white border-green-600"
-                  : "bg-transparent text-gray-600 border-gray-300 hover:bg-gray-50"
-              }
-            >
-              {status} ({status === "All" ? products.length : products.filter((p) => p.status === status).length})
-            </Button>
-          ))}
-        </div>
-
-        {/* Search and Date Filter */}
-        <div className="p-4 border-b border-gray-200 space-y-4 w-120">
+      {/* Search and Date Filter */}
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
           <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <Input
-                placeholder="Search products..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full"
-              />
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => setShowDateFilter(!showDateFilter)}>
-                <Calendar className="w-4 h-4 mr-1" /> Filter by Date
-              </Button>
-              {dateFilter && (
-                <Button variant="outline" size="sm" onClick={() => setDateFilter("")} className="text-red-600">
-                  Clear Filter
-                </Button>
-              )}
-            </div>
+          <div className="flex-1">
+            <Input
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full"
+            />
           </div>
-          {showDateFilter && (
-            <div className="max-w-xs">
-              <Input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} />
-            </div>
-          )}
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => setShowDateFilter(!showDateFilter)}>
+              <Calendar className="w-4 h-4 mr-1" /> Filter by Date
+            </Button>
+            {dateFilter && (
+              <Button variant="outline" size="sm" onClick={() => setDateFilter("")} className="text-red-600">
+                Clear Filter
+              </Button>
+            )}
+          </div>
         </div>
-        <div className="overflow-x-auto">
-         <div className="p-4">
-          <DataTable
-            columns={productColumns(handleViewDetails, handleDeleteProduct)}
-            data={filteredProducts}
-            searchKey="name"
-            showSearch
-            showColumnVisibility
-            showPagination
-            showRowSelection={false}
-          />
-        </div>
-          
+        {showDateFilter && (
+          <div className="max-w-xs">
+            <Input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} />
+          </div>
+        )}
+      </div>
+
+      {/* Data Table */}
+      <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-white/30 shadow-lg overflow-hidden">
+        <div className="overflow-x-auto m">
+          <div className="p-6">
+            <DataTable
+              columns={productColumns(handleViewDetails, handleDeleteProduct)}
+              data={filteredProducts}
+              searchKey="name"
+              showSearch={false}
+              showColumnVisibility
+              showPagination
+              showRowSelection={false}
+            />
+          </div>
+
           {filteredProducts.length === 0 && (
             <div className="text-center py-12">
               <div className="text-gray-500 mb-2">No products found</div>
               <div className="text-sm text-gray-400">
-                {searchTerm || dateFilter || selectedStatus !== "All" 
+                {searchTerm || dateFilter || selectedStatus !== "All"
                   ? "Try adjusting your filters"
-                  : "Start by submitting your first product"
-                }
+                  : "Start by submitting your first product"}
               </div>
             </div>
           )}

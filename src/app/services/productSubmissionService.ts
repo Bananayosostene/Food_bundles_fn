@@ -1,24 +1,56 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ProductSubmissionData} from "../(dashboard)/Farmer/_components/product-submission-modal"
 import createAxiosClient from "../hooks/axiosClient"
 
-export interface ProductSubmissionData {
+
+export interface CreatProductSubmissionData {
   productName: string
   category: string
   quantity: number
   unit: string
   wishedPrice: number
+
 }
 
+export interface SubmissionStats {
+  totalSubmissions: number
+  pendingSubmissions: number
+  approvedSubmissions: number
+  rejectedSubmissions: number
+  totalEarnings: number
+}
+export interface Submission {
+  id: string
+  productName: string
+  submittedQty: number
+  wishedPrice: number
+  status: "PENDING" | "VERIFIED" | "APPROVED" | "REJECTED"
+  createdAt: string
+  updatedAt: string
+  farmerId: string
+}
+// service class
 export const productSubmissionService = {
-  submitProduct: async (productData: ProductSubmissionData) => {
-    const axiosClient = createAxiosClient()
+  submitProduct: async (data: ProductSubmissionData) => {
+    const axiosClient = createAxiosClient();
+      const formData = new FormData() 
 
-    const response = await axiosClient.post("/product-submissions", productData, {
+      formData.append("productName", data.productName)
+      formData.append("category", data.category)
+      formData.append("quantity", data.quantity.toString())
+      formData.append("unit", data.unit)
+      formData.append("wishedPrice", data.wishedPrice.toString())
+      const response = await axiosClient.post("/farmers/submit-product/{productId}", formData, {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
-    })
+    });
 
-    return response.data
-  },
-}
+    return response.data;
+    
+    } 
+  
+
+  }
+
+// Export singleton
+
