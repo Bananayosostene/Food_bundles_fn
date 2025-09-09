@@ -65,7 +65,7 @@ export default function StatsCards() {
 
   return (
     <div className="container mx-auto px-4 py-2">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 border border-red-500">
         {stats.map((stat, index) => (
           <Card
             key={index}
@@ -73,7 +73,7 @@ export default function StatsCards() {
           >
             <div className="absolute inset-0 bg-green-100 from-white/0 via-white/20 to-white/0 -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
 
-            <CardContent className="p-4 relative z-10">
+            <CardContent className=" relative z-10">
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1">
                   <div className="flex items-center gap-1 mb-1">

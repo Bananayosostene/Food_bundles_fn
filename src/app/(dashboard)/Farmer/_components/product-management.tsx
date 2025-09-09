@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import ProductSubmissionModal from "./product-submission-modal"
 import { DataTable } from "@/components/data-table"
 import { productColumns } from "./product-columns"
-import { ProductSubmissionData } from "./product-submission-modal"
+import type { ProductSubmissionData } from "./product-submission-modal"
 
 interface Product {
   id: string
@@ -152,8 +152,8 @@ export default function ProductManagement() {
       </div>
 
       {/* Search and Date Filter */}
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-          <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+        <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <Input
               placeholder="Search products..."
@@ -181,8 +181,8 @@ export default function ProductManagement() {
       </div>
 
       {/* Data Table */}
-      <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-white/30 shadow-lg overflow-hidden">
-        <div className="overflow-x-auto m">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
+        <div className="overflow-x-auto">
           <div className="p-6">
             <DataTable
               columns={productColumns(handleViewDetails, handleDeleteProduct)}
