@@ -1,70 +1,74 @@
-// src/app/(wherever)/DashboardHeader.tsx
-"use client";
+"use client"
 
-import { useState, useMemo } from "react";
-import { Bell, User, ChevronDown, Settings, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { usePathname, useRouter } from "next/navigation";
+import { useState, useMemo, useId } from "react"
+import { Bell, User, ChevronDown, Settings, LogOut } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { usePathname, useRouter } from "next/navigation"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import NotificationsDrawer from "./notification";
-import ProfileDrawer from "./ProfileDrawer";
-import { authService } from "@/app/services/authService";
-import { toast } from "sonner";
-import { useAuthUser } from "@/app/hooks/useAuthUser";
-import SettingsDrawer from "./farmerSettings";
+} from "@/components/ui/dropdown-menu"
+import { Badge } from "@/components/ui/badge"
+import NotificationsDrawer from "./notification"
+import ProfileDrawer from "./ProfileDrawer"
+import { authService } from "@/app/services/authService"
+import { toast } from "sonner"
+import { useAuthUser } from "@/app/hooks/useAuthUser"
+import SettingsDrawer from "./farmerSettings"
 
-const testNotifications: { id: string; title: string; message: string; orderId: string; timestamp: string; isRead: boolean; type: "order_initiated" | "order_completed" | "order_cancelled" | "payment_received"; }[] = [/* ... your sample data ... */];
+const testNotifications: {
+  id: string
+  title: string
+  message: string
+  orderId: string
+  timestamp: string
+  isRead: boolean
+  type: "order_initiated" | "order_completed" | "order_cancelled" | "payment_received"
+}[] = [
+  /* ... your sample data ... */
+]
 
 export default function DashboardHeader() {
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const unreadCount = testNotifications.filter((n) => !n.isRead).length;
-  const pathname = usePathname();
-  const router = useRouter();
+  const dropdownId = useId()
 
-  const { user, loading } = useAuthUser();
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
+  const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const unreadCount = testNotifications.filter((n) => !n.isRead).length
+  const pathname = usePathname()
+  const router = useRouter()
+
+  const { user, loading } = useAuthUser()
 
   // Nice fallbacks if name is missing
-  const displayName = useMemo(
-    () => user?.name || user?.username || user?.phone || "Farmer",
-    [user]
-  );
-  const email = user?.email || "";
-  const avatarLetter = (user?.name || user?.username || user?.phone || "F")
-    .toString()
-    .trim()
-    .charAt(0)
-    .toUpperCase();
+  const displayName = useMemo(() => user?.name || user?.username || user?.phone || "Farmer", [user])
+  const email = user?.email || ""
+  const avatarLetter = (user?.name || user?.username || user?.phone || "F").toString().trim().charAt(0).toUpperCase()
 
-  const handleProfileClick = () => setIsProfileOpen(true);
-  const handleSettingClick = () => setIsSettingsOpen(true);
+  const handleProfileClick = () => setIsProfileOpen(true)
+  const handleSettingClick = () => setIsSettingsOpen(true)
   const handleLogout = async () => {
     try {
-      setIsLoggingOut(true);
+      setIsLoggingOut(true)
       // optional: call backend to invalidate token
-      await authService.logout().catch(() => {});
+      await authService.logout().catch(() => {})
       // clear storage
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      sessionStorage.clear();
-      toast.success("Logged out successfully");
-      router.push("/login");
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+      sessionStorage.clear()
+      toast.success("Logged out successfully")
+      router.push("/login")
     } catch (error) {
-      console.error("Logout error:", error);
-      toast.error("Failed to logout. Please try again.");
+      console.error("Logout error:", error)
+      toast.error("Failed to logout. Please try again.")
     } finally {
-      setIsLoggingOut(false);
+      setIsLoggingOut(false)
     }
-  };
+  }
 
   return (
     <>
@@ -72,15 +76,13 @@ export default function DashboardHeader() {
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between h-16">
             {/* Left: Brand */}
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center shadow-md">
+            <div className="flex items-center h-14 gap-3 bg-white/70 px-2 py-1 rounded-sm ">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center shadow-md rounded-sm overflow-hidden">
                 <img src="/imgs/Food_bundle_logo.png" alt="FoodBundle Logo" />
               </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-white">Food bundles</span>
-                <p className="text-xs text-white hidden sm:block self-end">
-                  {loading ? "Loading..." : `Welcome back, ${displayName}!`}
-                </p>
+              <div className="flex flex-col ">
+                <span className="text-xl font-bold text-black">Food bundles</span>
+            
               </div>
             </div>
 
@@ -104,13 +106,12 @@ export default function DashboardHeader() {
                     variant="ghost"
                     className="flex items-center gap-2 hover:bg-green-400 transition-colors duration-200 px-3 py-2 h-auto"
                     disabled={isLoggingOut}
+                    id={dropdownId}
                   >
                     <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-md">
                       <span className="text-white text-sm font-medium">{avatarLetter}</span>
                     </div>
-                    <span className="font-medium text-white hidden sm:block">
-                      {loading ? "..." : displayName}
-                    </span>
+                    <span className="font-medium text-white hidden sm:block">{loading ? "..." : displayName}</span>
                     <ChevronDown className="h-4 w-4 text-white transition-transform duration-200" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -148,14 +149,8 @@ export default function DashboardHeader() {
         notifications={testNotifications}
       />
 
-      <ProfileDrawer
-        isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
-      />
-      <SettingsDrawer
-      isOpen={isSettingsOpen}
-      onClose={() =>setIsSettingsOpen(false)}
-      />
+      <ProfileDrawer isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+      <SettingsDrawer isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </>
-  );
+  )
 }

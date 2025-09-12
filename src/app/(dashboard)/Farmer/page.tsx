@@ -17,9 +17,9 @@ export default function FarmerDashboard() {
 
         <div className="flex-1 flex">
           {/* Dashboard Content */}
-          <div className="flex-1 p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
-            {/* Stats Cards */}
-            <StatsCards />
+          <div className="container mx-auto px-6 py-6">
+         
+            {/* <StatsCards /> */}
 
             <ProductProvider>
             <ProductManagement />
