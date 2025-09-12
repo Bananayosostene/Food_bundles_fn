@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useId } from "react"
+import { useState, useMemo, useId, createContext } from "react"
 import { Bell, User, ChevronDown, Settings, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { usePathname, useRouter } from "next/navigation"
@@ -16,8 +16,9 @@ import NotificationsDrawer from "./notification"
 import ProfileDrawer from "./ProfileDrawer"
 import { authService } from "@/app/services/authService"
 import { toast } from "sonner"
-import { useAuthUser } from "@/app/hooks/useAuthUser"
 import SettingsDrawer from "./farmerSettings"
+import { useAuth } from "@/app/contexts/auth-context"
+import Image from "next/image"
 
 const testNotifications: {
   id: string
@@ -27,9 +28,7 @@ const testNotifications: {
   timestamp: string
   isRead: boolean
   type: "order_initiated" | "order_completed" | "order_cancelled" | "payment_received"
-}[] = [
-  /* ... your sample data ... */
-]
+}[] = []
 
 export default function DashboardHeader() {
   const dropdownId = useId()
@@ -42,12 +41,16 @@ export default function DashboardHeader() {
   const pathname = usePathname()
   const router = useRouter()
 
-  const { user, loading } = useAuthUser()
+  const { user, getUserProfileImage } = useAuth();
 
   // Nice fallbacks if name is missing
-  const displayName = useMemo(() => user?.name || user?.username || user?.phone || "Farmer", [user])
+  const displayName = useMemo(() => user?.name || user?.name || user?.phone || "Farmer", [user])
   const email = user?.email || ""
-  const avatarLetter = (user?.name || user?.username || user?.phone || "F").toString().trim().charAt(0).toUpperCase()
+  const profileImage = getUserProfileImage()
+
+  console.log("TopResNav - Current user:", user);
+  console.log("TopResNav - Profile image:", profileImage);
+  console.log("TopResNav - User name:", displayName);
 
   const handleProfileClick = () => setIsProfileOpen(true)
   const handleSettingClick = () => setIsSettingsOpen(true)
@@ -108,10 +111,21 @@ export default function DashboardHeader() {
                     disabled={isLoggingOut}
                     id={dropdownId}
                   >
-                    <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-md">
-                      <span className="text-white text-sm font-medium">{avatarLetter}</span>
+                    <div className="p-[2px] bg-green-600 rounded-full flex items-center justify-center ">
+                     <Image                      
+                     src={profileImage || "/placeholder.svg"}
+                     alt={`${displayName}'s profile`}
+                      width={40}
+                      height={40}
+                      className="rounded-full object-cover w-10 h-10"
+                      onError={(e) => {
+                      // Fallback if image fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.src = "/imgs/elie.jpg";
+                              }}
+                                           />
                     </div>
-                    <span className="font-medium text-white hidden sm:block">{loading ? "..." : displayName}</span>
+                    <span className="font-medium text-white hidden sm:block">{displayName}</span>
                     <ChevronDown className="h-4 w-4 text-white transition-transform duration-200" />
                   </Button>
                 </DropdownMenuTrigger>

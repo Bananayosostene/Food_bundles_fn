@@ -140,10 +140,10 @@ export default function ProductSubmissionModal({ isOpen, onClose, onSubmit }: Pr
         if (profile.sector) await loadCells(profile.sector)
         if (profile.cell) await loadVillages(profile.cell)
 
-        toast.success("Location loaded from your profile")
+        // toast.success("Location loaded from your profile")
       } else {
         console.log("[v0] No location data in farmer profile")
-        toast.info("Please enter your location manually")
+        // toast.info("Please enter your location manually")
       }
     } catch (error: any) {
       console.error("[v0] Failed to load farmer location:", error)
@@ -153,7 +153,7 @@ export default function ProductSubmissionModal({ isOpen, onClose, onSubmit }: Pr
       } else if (error.message.includes("Unable to connect")) {
         toast.error("Cannot connect to server. Please check your connection.")
       } else {
-        toast.info("Please enter your location manually")
+        // toast.info("Please enter your location manually")
       }
     } finally {
       setLoadingLocation(false)
