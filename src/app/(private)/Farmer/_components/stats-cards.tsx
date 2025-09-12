@@ -4,6 +4,9 @@ import { Package, XCircle, Clock, DollarSign, TrendingUp, Sparkles } from "lucid
 import { Card, CardContent } from "@/components/ui/card"
 import { LineChart, Line, ResponsiveContainer } from "recharts"
 
+
+
+
 export default function StatsCards() {
   // Mock data for earnings chart
   const earningsData = [
