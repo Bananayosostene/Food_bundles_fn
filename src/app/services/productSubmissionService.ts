@@ -26,6 +26,7 @@ export interface Submission {
   id: string
   productName: string
   submittedQty: number
+  unit: string
   wishedPrice: number
   status: "PENDING" | "VERIFIED" | "APPROVED" | "REJECTED"
   createdAt: string

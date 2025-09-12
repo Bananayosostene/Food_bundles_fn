@@ -8,6 +8,7 @@ export interface Product {
   name: string
   category: string
   quantity: string 
+  unit?: string // Optional unit of measurement
   submittedDate: string
   price: string
   status: string

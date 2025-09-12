@@ -47,6 +47,7 @@ export const productColumns = (
     accessorKey: "quantity",
     header: "Quantity",
   },
+  
   {
     accessorKey: "submittedDate",
     header: "Date",
