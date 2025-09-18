@@ -226,6 +226,7 @@ getProductDetails: async (productName: string, categoryId: string): Promise<Prod
   try {
     const axiosClient = createAxiosClient()
 
+
     const url = `/products/search?name=${encodeURIComponent(productName)}&categoryId=${encodeURIComponent(categoryId)}`
 
     const response = await axiosClient.get<Product[]>(url)
