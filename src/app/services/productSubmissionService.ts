@@ -176,7 +176,10 @@ export const productSubmissionService = {
 
       return response.data
     } catch (error) {
-      return null
+      if (error instanceof Error) {
+        console.error("Error message:", error.message)
+      }
+      throw new Error("Failed to load this category. Please try again later.")
     }
   },
 
@@ -219,19 +222,21 @@ export const productSubmissionService = {
 
 
   // Get product details if it exists
-  getProductDetails: async (productName: string, category: string): Promise<Product | null> => {
-    try {
-      const axiosClient = createAxiosClient()
-      const response = await axiosClient.get<Product[]>(
-        `/products/search?name=${encodeURIComponent(productName)}&category=${encodeURIComponent(category)}`,
-      )
+getProductDetails: async (productName: string, categoryId: string): Promise<Product | null> => {
+  try {
+    const axiosClient = createAxiosClient()
 
-      return response.data.length > 0 ? response.data[0] : null
-    } catch (error) {
-      console.error("Failed to get product details:", error)
-      return null
-    }
-  },
+
+    const url = `/products/search?name=${encodeURIComponent(productName)}&categoryId=${encodeURIComponent(categoryId)}`
+
+    const response = await axiosClient.get<Product[]>(url)
+
+    return response.data.length > 0 ? response.data[0] : null
+  } catch (error) {
+    console.error("Failed to get product details:", error)
+    return null
+  }
+},
 
   submitProduct: async (data: ProductSubmissionData): Promise<ProductSubmissionData> => {
   try {
@@ -277,7 +282,7 @@ export const productSubmissionService = {
     try {
       const axiosClient = createAxiosClient()
       const response = await axiosClient.get("/submissions")
-      return response.data.data // ✅ make sure it’s always an array
+      return response.data.data 
   } catch (error) {
     console.error("Failed to fetch submissions:", error)
     return [] 
@@ -317,74 +322,4 @@ export const productSubmissionService = {
       }
     }
   },
-
-  // Cancel/withdraw a pending submission
- updateSubmissionQuantity: async (submissionId: string, productId: string, quantity: number): Promise<boolean> => {
-  try {
-    const axiosClient = createAxiosClient()
-    
-    await axiosClient.put(`/submissions/${submissionId}/products/${productId}/update-quantity`, {
-      quantity: quantity
-    })
-    
-    return true
-  } catch (error) {
-    console.error("Failed to update submission quantity:", error)
-    return false
-  }
-},
-
-  // Check authentication status
-  checkAuthStatus: async (): Promise<boolean> => {
-    try {
-      const axiosClient = createAxiosClient()
-      const response = await axiosClient.get("/auth/verify")
-      return response.status === 200
-    } catch (error) {
-      console.error("Authentication check failed:", error)
-      return false
-    }
-  },
-
-  // Debug function to help troubleshoot issues
-  debugApiEndpoints: async () => {
-    const axiosClient = createAxiosClient()
-
-    // Test authentication endpoints
-    const endpointsToTest = ["/auth/verify", "/locations", "/category"]
-
-    for (const endpoint of endpointsToTest) {
-      try {
-        const response = await axiosClient.get(endpoint)
-        console.log(`${endpoint} - Status: ${response.status}`)
-          } catch (error) {
-      if (error instanceof Error) {
-        console.error("Error message:", error.message)
-      }
-      }
-    }
-
-    // Check localStorage contents
-    const keys = ["farmerId", "userId", "token", "authToken", "user", "farmer"]
-    keys.forEach((key) => {
-      const value = localStorage.getItem(key)
-    })
-
-    // Test farmer profile endpoint if we have an ID
-   const farmerId =localStorage.getItem("farmerId") || localStorage.getItem("userId") || sessionStorage.getItem("farmerId")
-   
-    if (farmerId && farmerId !== "null" && farmerId !== "undefined") {
-      try {
-        const response = await axiosClient.get(`/farmers/${farmerId}`)
-        console.log(`/farmers/${farmerId} - Status: ${response.status}`)
-        console.log("Farmer profile data:", response.data)
-          } catch (error) {
-      if (error instanceof Error) {
-        console.error("Error message:", error.message)
-      }
-      }
-    } 
-  },
-
- 
 }

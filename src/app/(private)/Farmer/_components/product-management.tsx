@@ -1,14 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, Calendar, Eye, Trash2, Package, Tag, X, Hash, MapPin } from "lucide-react"
+import { Plus, Calendar, Package, Tag, X, Hash, MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import ProductSubmissionModal, { ProductSubmissionData } from "./product-submission-modal"
 import { productColumns } from "./product-columns"
 import { DataTable } from "@/components/data-table"
 import { Product } from "./product-context"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { productSubmissionService, Submission } from "@/app/services/productSubmissionService"
 
 interface productSubmitData {
@@ -83,7 +83,6 @@ export default function ProductManagement() {
   const [showDateFilter, setShowDateFilter] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [viewProduct, setViewProduct] = useState<Product | null>(null) 
-  const [isLockedOpen, setIsLockedOpen] = useState(false);
 
   const statusOptions = ["All", "PENDING", "VERIFIED", "APPROVED", "REJECTED"]
 
@@ -115,7 +114,7 @@ export default function ProductManagement() {
       product.location.toLowerCase().includes(searchTerm.toLowerCase())
     return matchesStatus && matchesDate && matchesSearch
   })
-
+ 
   const addProduct = (product: Product) => {
     setProducts((prev) => [...prev, product])
   }
